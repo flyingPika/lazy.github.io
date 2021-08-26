@@ -3,7 +3,7 @@ title: Taichi 0.7.22 API 参考
 date: 2021-07-24 02:00:00 +0800
 categories: [CG, SIMULATION]
 tags: [taichi]     # TAG names should always be lowercase
-math: true
+math: false
 pin: false
 ---
 

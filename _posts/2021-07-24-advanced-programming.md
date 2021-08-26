@@ -3,7 +3,7 @@ title: Taichi 0.7.22 高级编程
 date: 2021-07-24 03:00:00 +0800
 categories: [CG, SIMULATION]
 tags: [taichi]     # TAG names should always be lowercase
-math: true
+math: false
 pin: false
 ---
 
