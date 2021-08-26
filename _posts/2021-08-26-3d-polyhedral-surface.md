@@ -7,7 +7,6 @@ math: false
 pin: false
 ---
 
-# 三维多面体表面
 
 ## 1 介绍
 
