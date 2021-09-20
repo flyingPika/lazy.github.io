@@ -1,11 +1,13 @@
 ---
-title: 表面网格
+title: CGAL 5.3 表面网格
 date: 2021-08-26 00:02:00 +0800
 categories: [CG, GEOMETRY]
 tags: [cgal]     # TAG names should always be lowercase
 math: false
 pin: false
 ---
+
+<https://doc.cgal.org/latest/Surface_mesh/index.html#Chapter_3D_Surface_mesh>
 
 类 Surface_mesh 是一个半边数据结构的实现，用于表示多面体表面。它是包 Halfedge Data Structures 和包 3D Polyhedral Surface 的替代。主要区别在于它基于索引而不是指针。此外，向顶点、半边、边和面添加信息的机制更加简单，在运行时完成而不是编译时。
 

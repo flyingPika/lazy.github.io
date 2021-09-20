@@ -1,5 +1,5 @@
 ---
-title: 半边数据结构
+title: CGAL 5.3 半边数据结构
 date: 2021-08-26 00:00:00 +0800
 categories: [CG, GEOMETRY]
 tags: [cgal]     # TAG names should always be lowercase
@@ -7,13 +7,21 @@ math: false
 pin: false
 ---
 
+<https://doc.cgal.org/latest/HalfedgeDS/index.html#Chapter_Halfedge_Data_Structures>
+
 ## 1 介绍
 
 半边数据结构是以边为中心的数据结构，能够维护顶点、边和面的关联信息。每个边被分解为两个相反方向的半边。每个半边存储一个关联面和关联顶点。对于每个面和每个顶点，存储一个关联半边。半边数据结构的简化变体可能省略一些信息。
 
+![图1](/assets/img/posts/2021-08-26/halfedge_small.png)
+_图1_
+
 半边数据结构是一种组合数据结构，几何解释由构建在半边数据结构之上的类添加。这些类可能比直接使用半边数据结构更方便，因为半边数据结构意味着作为一个实现层。参见多面体表面一章中的 Polyhedron_3 类。
 
 ## 2 软件设计
+
+![图2](/assets/img/posts/2021-08-26/hds_design_col.png)
+_图2_
 
 上图说明了软件设计的三层职责，以 Polyhedron_3 作为顶层的例子。Item 提供信息实际存储的空间。半边需要提供下一个半边和相反半边的引用，对于前一个半边、关联顶点和关联面的引用是可选的。顶点和面可以为空，可选择提供关联半边的索引。HalfedgeDataStructure 和 Polyhedron 支持前面提到的选项。此外，Item 类可以使用任意属性和成员函数进行扩展，这将通过继承提升为用于 Polyhedron 的实际的类。
 
@@ -30,6 +38,9 @@ Polyhedron_3 类作为第三层示例添加了几何解释，提供了易于使�
 ### 3.1 The Default Halfedge Data Structure
 
 下面的例子使用了默认的 HalfedgeDS 和 Decorator。默认的 HalfedgeDS 使用基于列表的表示。Item 的所有关联和一种顶点的点类型被定义。简单的 Traits 类提供用于点的类型。程序创建一个由两个半边、一个顶点和两个面组成的环，并检查其有效性。
+
+![图3](/assets/img/posts/2021-08-26/loop.png)
+_图3_
 
 ```cpp
 #include <CGAL/HalfedgeDS_default.h>
