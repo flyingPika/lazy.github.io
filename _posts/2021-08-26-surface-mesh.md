@@ -227,9 +227,89 @@ int main()
 
 ## 5 属性
 
+Surface_mesh 提供了一种机制，可以在运行时为顶点、半边、边和面指定新属性。每个属性由字符串和键类型标识。给定属性的值存储为连续的内存块。每当向数据结构添加键类型的元素时，或者当 Surface_mesh::collect_garbage() 执行时，对属性的引用无效。删除元素后，元素的属性将继续存在。试图通过无效元素访问属性会导致未定义的行为。
+
+> 属性由元素标识。
+
+默认只维护一个属性，即“v:point”。当通过 Surface_mesh::add_vertex() 添加新点到数据结构时，必须提供属性的值。使用 Surface_mesh::points() 或 Surface_mesh::point(Surface_mesh::Vertex_index v) 可以直接访问属性。
+
+移除元素时，仅将元素标记为移除，当 Surface_mesh::collect_garbage() 执行时才真正移除元素。垃圾回收也会真正移除这些元素的属性。
+
+连通性也存储在属性中，即属性“v:connectivity”、“h:connectivity”和“f:connectivity”。
+
+可以方便地移除用户添加的属性映射，通过索引类型（Surface_mesh::remove_property_maps\<T>()）或者移除全部（Surface_mesh::remove_all_property_maps()）。
+
+要清除网格，你可能获得所有属性映射都被移除的网格（Surface_mesh::clear()），或者保留属性映射的网格（Surface_mesh::clear_without_removing_property_maps()）。注意在这两种情况下，“v::point”属性映射将被保留，并且保留对它的引用是安全的。
+
 ### 5.1 例子
 
 这个例子展示了如何使用属性系统的最常用特性。
+
+```cpp
+// sm_properties.cpp
+typedef CGAL::Simple_cartesian<double> K;
+typedef CGAL::Surface_mesh<K::Point_3> Mesh;
+typedef Mesh::Vertex_index vertex_descriptor;
+typedef Mesh::Face_index face_descriptor;
+int main()
+{
+    Mesh m;
+    vertex_descriptor v0 = m.add_vertex(K::Point_3(0,2,0));
+    vertex_descriptor v1 = m.add_vertex(K::Point_3(2,2,0));
+    vertex_descriptor v2 = m.add_vertex(K::Point_3(0,0,0));
+    vertex_descriptor v3 = m.add_vertex(K::Point_3(2,0,0));
+    vertex_descriptor v4 = m.add_vertex(K::Point_3(1,1,0));
+    m.add_face(v3, v1, v4);
+    m.add_face(v0, v4, v1);
+    m.add_face(v0, v2, v4);
+    m.add_face(v2, v3, v4);
+    // give each vertex a name, the default is empty
+    Mesh::Property_map<vertex_descriptor,std::string> name;
+    bool created;
+    boost::tie(name, created) = m.add_property_map<vertex_descriptor,std::string>("v:name","");
+    assert(created);
+    // add some names to the vertices
+    name[v0] = "hello";
+    name[v2] = "world";
+    {
+        // You get an existing property, and created will be false
+        Mesh::Property_map<vertex_descriptor,std::string> name;
+        bool created;
+        boost::tie(name, created) = m.add_property_map<vertex_descriptor,std::string>("v:name", "");
+        assert(! created);
+    }
+    //  You can't get a property that does not exist
+    Mesh::Property_map<face_descriptor,std::string> gnus;
+    bool found;
+    boost::tie(gnus, found) = m.property_map<face_descriptor,std::string>("v:gnus");
+    assert(! found);
+    // retrieve the point property for which exists a convenience function
+    Mesh::Property_map<vertex_descriptor, K::Point_3> location = m.points();
+    for(vertex_descriptor vd : m.vertices()) {
+        std::cout << name[vd] << " @ " << location[vd] << std::endl;
+    }
+    std::vector<std::string> props = m.properties<vertex_descriptor>();  // 顶点属性
+    for(std::string p : props){
+        std::cout << p << std::endl;
+    }
+    // delete the string property again
+    m.remove_property_map(name);
+    return 0;
+}
+```
+
+```cpp
+// 输出
+hello @ 0 2 0
+ @ 2 2 0
+world @ 0 0 0
+ @ 2 0 0
+ @ 1 1 0
+v:connectivity
+v:point
+v:removed
+v:name
+```
 
 ## 6 边界
 
