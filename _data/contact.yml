@@ -11,6 +11,10 @@
   icon: 'fas fa-envelope'
   noblank: true            # open link in current tab
 -
+  type: imdb
+  icon: 'fab fa-imdb'
+  url:  'https://www.imdb.com/user/ur88183274/ratings?ref_=nv_usr_rt_4'
+-
   type: rss
   icon: 'fas fa-rss'
   noblank: true
