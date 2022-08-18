@@ -78,6 +78,9 @@ int main()
 
 下图说明了允许在表面网格中导航的函数：Surface_mesh::opposite()，Surface_mesh::next()，Surface_mesh::prev()，Surface_mesh::target() 和 Surface_mesh::face()。另外，函数 Surface_mesh::halfedge() 允许获得与顶点和面相关联的半边。或者，可以使用定义在 CGAL and the Boost Graph Library 中的同名自由函数。
 
+![图1](/assets/img/posts/2021-08-26/connectivity.png)
+_图1_
+
 与面关联的半边构成环路。
 
 连通性不允许用孔表示面。
