@@ -15,7 +15,7 @@ pin: false
 
 当删除元素时，它们只被标记为已删除，要真正删除它们必须调用垃圾收集函数。
 
-类 Surface_mesh 可以通过其类成员函数、以及 CGAL 包和 Boost Graph Library 所描述的 BGL API 使用，因为它是概念 MutableFaceGraph 和 FaceListGraph 的模型。因此，可以在表面网格上使用包 Triangulated Surface Mesh Simplification、Triangulated Surface Mesh Segmentation 和 Triangulated Surface Mesh Deformation 的算法。
+类 Surface_mesh 可以通过其类成员函数、以及 CGAL and Boost Graph Library 所描述的 BGL API 使用，因为它是概念 MutableFaceGraph 和 FaceListGraph 的模型。因此，可以在表面网格上使用包 Triangulated Surface Mesh Simplification、Triangulated Surface Mesh Segmentation 和 Triangulated Surface Mesh Deformation 的算法。
 
 ## 1 使用
 
@@ -313,18 +313,287 @@ v:name
 
 ## 6 边界
 
+半边存储关联面的索引。若半边 h 没有关联面，即 sm.face(h) == Surface_mesh::null_face()，则其位于边界上。若边的任一条半边位于边界上，则其位于边界上。若顶点的任一条关联半边位于边界上，则其位于边界上。
+
+一个顶点仅仅有一个邻接半边。为了只检查邻接半边是否在边界上，调用函数 Surface_mesh::is_border(Vertex_index v, bool check_all_incident_halfedges = true) 时要令 check_all_incident_halfedges = false。
+
+用户有责任正确设置顶点的邻接半边。
+
+* Surface_mesh::set_vertex_halfedge_to_border_halfedge(Vertex_index v)
+
+* Surface_mesh::set_vertex_halfedge_to_border_halfedge(Halfedge_index h)
+
+* Surface_mesh::set_vertex_halfedge_to_border_halfedge()
+
 ## 7 表面网格和 BGL API
+
+类 Surface_mesh 是概念 IncidenceGraph 的模型，于是可以直接使用 Dijkstra shortest path 和 Kruskal minimum spanning tree 等算法。
+
+| BGL                                       | Surface_mesh |
+| - | - |
+| boost::graph_traits<G>::vertex_descriptor | Surface_mesh::Vertex_index |
+| boost::graph_traits<G>::edge_descriptor   | Surface_mesh::Edge_index |
+| vertices(const G& g)                      | sm.vertices() |
+| edges(const G& g)                         | sm.edges() |
+| vd = source(ed,g)                         | vd = sm.source(ed) |
+| na                                        | n = sm.number_of_vertices() |
+| n = num_vertices(g)                       | n = sm.number_of_vertices() + sm.number_of_removed_vertices() |
+
+类 Surface_mesh 也是概念 MutableFaceGraph 的模型。
+
+| BGL                                           | Surface_mesh |
+| - | - |
+| boost::graph_traits<G>::halfedge_descriptor   | Surface_mesh::Halfedge_index |
+| boost::graph_traits<G>::face_descriptor       | Surface_mesh::Face_index |
+| halfedges(const G& g)	                        | sm.halfedges() |
+| faces(const G& g)	                            | sm.faces() |
+| hd = next(hd, g)                              | hd = sm.next(hd) |
+| hd = prev(hd, g)                              | hd = sm.prev(hd) |
+| hd = opposite(hd,g)                           | hd = sm.opposite(hd) |
+| hd = halfedge(vd,g)                           | hd = sm.halfedge(vd) |
+| etc.                                          | |	
+
+CGAL and the Boost Graph Library 中描述的 BGL API 使我们能够编写处理表面网格的几何算法，这些算法能够作用于任何 FaceGraph 或 MutableFaceGraph 的模型。
+
+BGL 算法使用属性映射将信息与顶点和边相联系。一个重要的属性是索引，其为 0 到 num_vertices(g) 之间的整数。这允许算法创建适当大小的向量，以存储逐顶点信息。
 
 ### 7.1 例子
 
+第一个例子展示了如何在表面网格上直接使用 Kruskal minimum spanning tree。
+
+```cpp
+#include <CGAL/Simple_cartesian.h>
+#include <CGAL/Surface_mesh.h>
+#include <boost/graph/kruskal_min_spanning_tree.hpp>
+#include <iostream>
+#include <fstream>
+#include <list>
+typedef CGAL::Simple_cartesian<double>                       Kernel;
+typedef Kernel::Point_3                                      Point;
+typedef CGAL::Surface_mesh<Point>                            Mesh;
+typedef boost::graph_traits<Mesh>::vertex_descriptor vertex_descriptor;
+typedef boost::graph_traits<Mesh>::vertex_iterator   vertex_iterator;
+typedef boost::graph_traits<Mesh>::edge_descriptor   edge_descriptor;
+void kruskal(const Mesh& sm)
+{
+   // We use the default edge weight which is the squared length of the edge
+  std::list<edge_descriptor> mst;
+  boost::kruskal_minimum_spanning_tree(sm, std::back_inserter(mst));
+  std::cout << "#VRML V2.0 utf8\n"
+    "Shape {\n"
+    "  appearance Appearance {\n"
+    "    material Material { emissiveColor 1 0 0}}\n"
+    "    geometry\n"
+    "    IndexedLineSet {\n"
+    "      coord Coordinate {\n"
+    "        point [ \n";
+  vertex_iterator vb,ve;
+  for(boost::tie(vb, ve) = vertices(sm); vb!=ve; ++vb){
+    std::cout <<  "        " << sm.point(*vb) << "\n";
+  }
+  std::cout << "        ]\n"
+               "     }\n"
+    "      coordIndex [\n";
+  for(std::list<edge_descriptor>::iterator it = mst.begin(); it != mst.end(); ++it)
+  {
+    edge_descriptor e = *it ;
+    vertex_descriptor s = source(e,sm);
+    vertex_descriptor t = target(e,sm);
+    std::cout << "      " << s << ", " << t <<  ", -1\n";
+  }
+  std::cout << "]\n"
+    "  }#IndexedLineSet\n"
+    "}# Shape\n";
+}
+int main(int argc, char** argv)
+{
+  Mesh sm;
+  std::string fname = argc==1?CGAL::data_file_path("meshes/knot1.off"):argv[1];
+  if(!CGAL::IO::read_polygon_mesh(fname, sm))
+  {
+    std::cerr << "Invalid input file." << std::endl;
+    return EXIT_FAILURE;
+  }
+  kruskal(sm);
+  return 0;
+}
+```
+
+第二个例子展示了如何将属性映射用于 Prim's minimum spanning tree 等算法。算法内部也使用顶点索引属性映射。
+
+```cpp
+#include <CGAL/Simple_cartesian.h>
+#include <CGAL/Surface_mesh.h>
+#include <iostream>
+#include <fstream>
+// workaround a bug in Boost-1.54
+#include <CGAL/boost/graph/dijkstra_shortest_paths.h>
+#include <boost/graph/prim_minimum_spanning_tree.hpp>
+typedef CGAL::Simple_cartesian<double>                       Kernel;
+typedef Kernel::Point_3                                      Point;
+typedef CGAL::Surface_mesh<Point>                            Mesh;
+typedef boost::graph_traits<Mesh>::vertex_descriptor vertex_descriptor;
+int main(int argc, char* argv[])
+{
+  Mesh sm;
+  std::string fname = argc==1?CGAL::data_file_path("meshes/knot1.off"):argv[1];
+  if(!CGAL::IO::read_polygon_mesh(fname, sm))
+  {
+    std::cerr << "Invalid input file." << std::endl;
+    return EXIT_FAILURE;
+  }
+  Mesh::Property_map<vertex_descriptor,vertex_descriptor> predecessor;
+  predecessor = sm.add_property_map<vertex_descriptor,vertex_descriptor>("v:predecessor").first;
+  boost::prim_minimum_spanning_tree(sm, predecessor, boost::root_vertex(*vertices(sm).first));
+  std::cout << "#VRML V2.0 utf8\n"
+    "DirectionalLight {\n"
+    "direction 0 -1 0\n"
+    "}\n"
+    "Shape {\n"
+    "  appearance Appearance {\n"
+    "    material Material { emissiveColor 1 0 0}}\n"
+    "    geometry\n"
+    "    IndexedLineSet {\n"
+    "      coord Coordinate {\n"
+    "        point [ \n";
+  for(vertex_descriptor vd : vertices(sm)){
+    std::cout <<  "        " << sm.point(vd) << "\n";
+  }
+  std::cout << "        ]\n"
+    "     }\n"
+    "      coordIndex [\n";
+  for(vertex_descriptor vd : vertices(sm)){
+    if(predecessor[vd]!=vd){
+      std::cout << "      " << std::size_t(vd) << ", " << std::size_t(predecessor[vd]) <<  ", -1\n";
+    }
+  }
+  std::cout << "]\n"
+    "  }#IndexedLineSet\n"
+    "}# Shape\n";
+  sm.remove_property_map(predecessor);
+  return 0;
+}
+```
+
 ## 8 表面网格 I/O
+
+作为概念 FaceGraph 的模型，类 Surface_mesh 可以使用多种不同的文件类型读取或写入。
 
 ## 9 内存管理
 
+内存管理是半自动的。当更多的元素添加到结构中时，内存会增长，但当移除元素时，内存不会缩减。
+
+当添加元素并且底层向量的容量耗尽时，该向量重新分配内存。由于描述符本质上是索引，它们在重新分配后引用相同的元素。
+
+移除元素时，该元素仅标记为已移除，并被放入自由链表。当向表面网格添加元素时，如果自由链表不是空的，将从自由链表中获取内存。
+
+> 自由链表？
+
+对于所有元素，我们提供函数以获得已使用元素的数量、已使用且已移除元素的数量。对于顶点，这样的函数分别为 Surface_mesh::number_of_vertices() 和 Surface_mesh::number_of_removed_vertices()。
+
+迭代器（如 Surface_mesh::Vertex_iterator）仅枚举未标记为已移除的元素。
+
+要真正缩减使用的内存，必须调用 Surface_mesh::collect_garbage()。垃圾回收还会压缩与表面网格有关的属性。
+
+注意，通过垃圾收集，元素会获得新的索引。如果保留顶点描述符，它们很可能不再引用正确的顶点。
+
 ### 9.1 例子
 
-## 10 画表面网格
+```cpp
+#include <iostream>
+#include <CGAL/Simple_cartesian.h>
+#include <CGAL/Surface_mesh.h>
+typedef CGAL::Simple_cartesian<double> K;
+typedef CGAL::Surface_mesh<K::Point_3> Mesh;
+typedef Mesh::Vertex_index vertex_descriptor;
+int main()
+{
+  Mesh m;
+  Mesh::Vertex_index u;
+  for(unsigned int i=0; i < 5; ++i){
+    Mesh::Vertex_index v = m.add_vertex(K::Point_3(0,0,i+1));
+    if(i==2) u=v;
+  }
+  m.remove_vertex(u);
+  std::cout << "After insertion of 5 vertices and removal of the 3. vertex\n"
+            << "# vertices  / # vertices + # removed vertices = "
+            << m.number_of_vertices()
+            << " / " << m.number_of_vertices() + m.number_of_removed_vertices() << std::endl;
+  std::cout << "Iterate over vertices\n";
+  {
+    for(vertex_descriptor vd : m.vertices()){
+      std::cout << m.point(vd) << std::endl;
+    }
+  }
+  // The status of being used or removed is stored in a property map
+  Mesh::Property_map<Mesh::Vertex_index,bool> removed
+    = m.property_map<Mesh::Vertex_index,bool>("v:removed").first;
+  std::cout << "\nIterate over vertices and deleted vertices\n"
+            << "# vertices / # vertices + # removed vertices = "
+            << m.number_of_vertices()
+            << " / " << m.number_of_vertices() + m.number_of_removed_vertices() << std::endl;
+  {
+    unsigned int i = 0, end = m.number_of_vertices() + m.number_of_removed_vertices();
+    for( ; i < end; ++i) {
+      vertex_descriptor vh(i);
+      assert(m.is_removed(vh) == removed[vh]);
+      std::cout << m.point(vh) << ((m.is_removed(vh)) ? "  R\n" : "\n");
+    }
+  }
+  m.collect_garbage();
+  std::cout << "\nAfter garbage collection\n"
+            << "# vertices / # vertices + # removed vertices = "
+            << m.number_of_vertices()
+            << " / " << m.number_of_vertices() + m.number_of_removed_vertices() << std::endl;
+  {
+   unsigned int i = 0, end = m.number_of_vertices() + m.number_of_removed_vertices();
+    for( ; i < end; ++i) {
+      vertex_descriptor vh(i);
+      std::cout << m.point(vh) << ((m.is_removed(vh)) ? "  R\n" : "\n");
+    }
+  }
+  return 0;
+}
+```
+
+```cpp
+// 输出
+After insertion of 5 vertices and removal of the 3. vertex
+# vertices  / # vertices + # removed vertices = 4 / 5
+Iterate over vertices
+0 0 1
+0 0 2
+0 0 4
+0 0 5
+
+Iterate over vertices and deleted vertices
+# vertices / # vertices + # removed vertices = 4 / 5
+0 0 1
+0 0 2
+0 0 3  R
+0 0 4
+0 0 5
+
+After garbage collection
+# vertices / # vertices + # removed vertices = 4 / 4
+0 0 1
+0 0 2
+0 0 5
+0 0 4
+```
+
+## 10 绘制表面网格
+
+略
 
 ## 11 实现细节
 
+我们使用 boost::uint32_t 作为索引整数类型，在 64 位操作系统上大小仅为指针的一半，支持两亿个元素的网格。
+
+我们使用 std::vector 存储属性。因此，通过访问属性映射的首个元素的地址，可以访问底层原始数组。这可能很有用，例如，将顶点数组传递给 OpenGL。
+
+我们使用自由链表存储已移除的元素。这意味着，当移除顶点并随后调用 add_vertex 时，将重用已移除元素的内存。因此第 n 个插入的元素索引不一定为 n-1，并且迭代元素不一定以插入顺序枚举。
+
 ## 12 实现历史
+
+略

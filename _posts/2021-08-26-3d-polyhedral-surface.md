@@ -428,7 +428,7 @@ struct My_face : public CGAL::HalfedgeDS_face_base<Refs>
 
 程序从标准输入读取一个多面体表面，并将一个精细的多面体表面写入标准输出。输入和输出的格式为 OFF，文件扩展名为.off。
 
-细化是使用$\sqrt3$-机制创建细分曲面的一个步骤。
+细化是使用$\sqrt{3}$-机制创建细分曲面的一个步骤。
 
 该示例程序只能处理闭合曲面，但扩展示例 polyhedron_prog_subdiv_with_boundary.cpp 可以处理有边界的曲面。
 
@@ -536,10 +536,10 @@ int main(int argc, char* argv[])
 }
 ```
 
-> reserve(n)：分配内存空间，不会减少已被元素占用的内存空间。  
-std::transform()：在指定的范围内应用于给定操作，并将结果存储在另一个范围内。
-std::copy()：拷贝，注意分配足够内存空间。
-std::setprecision()：设置浮点精度。
+> reserve(n)：分配内存空间，不会减少已被元素占用的内存空间。
+> std::transform()：在指定的范围内应用于给定操作，并将结果存储在另一个范围内。
+> std::copy()：拷贝，注意分配足够内存空间。
+> std::setprecision()：设置浮点精度。
 
 ### 6.2 使用增量生成器和修改器机制
 
