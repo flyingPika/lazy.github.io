@@ -1,0 +1,587 @@
+<!DOCTYPE html><html lang="zh-CN" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Jekyll v4.3.2" /><meta property="og:title" content="CGAL 5.5 多边形网格处理" /><meta property="og:locale" content="zh_CN" /><meta name="description" content="https://doc.cgal.org/latest/Polygon_mesh_processing/index.html#title58" /><meta property="og:description" content="https://doc.cgal.org/latest/Polygon_mesh_processing/index.html#title58" /><link rel="canonical" href="https://flyingpika.github.io/lazy.github.io/posts/p-m-p/" /><meta property="og:url" content="https://flyingpika.github.io/lazy.github.io/posts/p-m-p/" /><meta property="og:site_name" content="lazy" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2022-09-05T00:00:00+08:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="CGAL 5.5 多边形网格处理" /><meta name="twitter:site" content="@twitter_username" /><meta name="google-site-verification" content="google_meta_tag_verification" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-09-05T00:00:00+08:00","datePublished":"2022-09-05T00:00:00+08:00","description":"https://doc.cgal.org/latest/Polygon_mesh_processing/index.html#title58","headline":"CGAL 5.5 多边形网格处理","mainEntityOfPage":{"@type":"WebPage","@id":"https://flyingpika.github.io/lazy.github.io/posts/p-m-p/"},"url":"https://flyingpika.github.io/lazy.github.io/posts/p-m-p/"}</script><title>CGAL 5.5 多边形网格处理 | lazy</title><link rel="apple-touch-icon" sizes="180x180" href="/lazy.github.io/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/lazy.github.io/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/lazy.github.io/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/lazy.github.io/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/lazy.github.io/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="lazy"><meta name="application-name" content="lazy"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/lazy.github.io/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/lazy.github.io/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script> <script defer src="https://cdn.jsdelivr.net/combine/npm/popper.js@1.15.0,npm/bootstrap@4/dist/js/bootstrap.min.js"></script> <script async src="https://cdn.jsdelivr.net/combine/npm/lozad/dist/lozad.min.js,npm/magnific-popup@1/dist/jquery.magnific-popup.min.js"></script> <script defer src="/lazy.github.io/assets/js/dist/post.min.js"></script> <script defer src="/lazy.github.io/app.js"></script> <script defer src="https://www.googletagmanager.com/gtag/js?id="></script> <script> document.addEventListener("DOMContentLoaded", function(event) { window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', ''); }); </script><body data-spy="scroll" data-target="#toc"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/lazy.github.io/" alt="avatar" class="mx-auto"> <img src="/lazy.github.io/assets/img/avatar/avatar.jpeg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/lazy.github.io/">lazy</a></div><div class="site-subtitle font-italic">Welcome home, ashen one. Speak thine heart's desire.</div></div><ul class="w-100"><li class="nav-item"> <a href="/lazy.github.io/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/lazy.github.io/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/lazy.github.io/tags/" class="nav-link"> <i class="fa-fw fas fa-tags ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/lazy.github.io/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/lazy.github.io/about/" class="nav-link"> <i class="fa-fw fas fa-info ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center"> <a href="https://github.com/flyingPika" aria-label="github" class="order-3" target="_blank" rel="noopener"> <i class="fab fa-github-alt"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['814833529','qq.com'].join('@')" aria-label="email" class="order-4" > <i class="fas fa-envelope"></i> </a> <a href="https://www.imdb.com/user/ur88183274/ratings?ref_=nv_usr_rt_4" aria-label="imdb" class="order-5" target="_blank" rel="noopener"> <i class="fab fa-imdb"></i> </a> <a href="/lazy.github.io/feed.xml" aria-label="rss" class="order-6" > <i class="fas fa-rss"></i> </a> <span class="icon-border order-2"></span> <span id="mode-toggle-wrapper" class="order-1"> <i class="mode-toggle fas fa-adjust"></i> <script type="text/javascript"> class ModeToggle { static get MODE_KEY() { return "mode"; } static get DARK_MODE() { return "dark"; } static get LIGHT_MODE() { return "light"; } constructor() { if (this.hasMode) { if (this.isDarkMode) { if (!this.isSysDarkPrefer) { this.setDark(); } } else { if (this.isSysDarkPrefer) { this.setLight(); } } } var self = this; /* always follow the system prefers */ this.sysDarkPrefers.addListener(function() { if (self.hasMode) { if (self.isDarkMode) { if (!self.isSysDarkPrefer) { self.setDark(); } } else { if (self.isSysDarkPrefer) { self.setLight(); } } self.clearMode(); } self.updateMermaid(); }); } /* constructor() */ setDark() { $('html').attr(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); } setLight() { $('html').attr(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); } clearMode() { $('html').removeAttr(ModeToggle.MODE_KEY); sessionStorage.removeItem(ModeToggle.MODE_KEY); } get sysDarkPrefers() { return window.matchMedia("(prefers-color-scheme: dark)"); } get isSysDarkPrefer() { return this.sysDarkPrefers.matches; } get isDarkMode() { return this.mode == ModeToggle.DARK_MODE; } get isLightMode() { return this.mode == ModeToggle.LIGHT_MODE; } get hasMode() { return this.mode != null; } get mode() { return sessionStorage.getItem(ModeToggle.MODE_KEY); } /* get the current mode on screen */ get modeStatus() { if (this.isDarkMode || (!this.hasMode && this.isSysDarkPrefer) ) { return ModeToggle.DARK_MODE; } else { return ModeToggle.LIGHT_MODE; } } updateMermaid() { if (typeof mermaid !== "undefined") { let expectedTheme = (this.modeStatus === ModeToggle.DARK_MODE? "dark" : "default"); let config = { theme: expectedTheme }; /* re-render the SVG › <https://github.com/mermaid-js/mermaid/issues/311#issuecomment-332557344> */ $(".mermaid").each(function() { let svgCode = $(this).prev().children().html(); $(this).removeAttr("data-processed"); $(this).html(svgCode); }); mermaid.initialize(config); mermaid.init(undefined, ".mermaid"); } } flipMode() { if (this.hasMode) { if (this.isSysDarkPrefer) { if (this.isLightMode) { this.clearMode(); } else { this.setLight(); } } else { if (this.isDarkMode) { this.clearMode(); } else { this.setDark(); } } } else { if (this.isSysDarkPrefer) { this.setLight(); } else { this.setDark(); } } this.updateMermaid(); } /* flipMode() */ } /* ModeToggle */ let toggle = new ModeToggle(); $(".mode-toggle").click(function() { toggle.flipMode(); }); </script> </span></div></div><div id="topbar-wrapper" class="row justify-content-center topbar-down"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/lazy.github.io/"> Posts </a> </span> <span>CGAL 5.5 多边形网格处理</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> <i class="fa fa-times-circle fa-fw" id="search-cleaner"></i> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="post-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>CGAL 5.5 多边形网格处理</h1><div class="post-meta text-muted d-flex flex-column"><div> <span class="semi-bold"> lazy </span> <span class="timeago " data-toggle="tooltip" data-placement="bottom" title="Mon, Sep 5, 2022, 12:00 AM +0800" prep="on" > Sep 5, 2022 <i class="unloaded">2022-09-05T00:00:00+08:00</i> </span></div><div> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="4005 words">22 min</span></div></div><div class="post-content"><p><a href="https://doc.cgal.org/latest/Polygon_mesh_processing/index.html#title58">https://doc.cgal.org/latest/Polygon_mesh_processing/index.html#title58</a></p><h2 id="1-介绍">1 介绍</h2><p>该包实现了一系列用于多边形网格处理的方法和类，从基础操作到复杂几何处理算法。该包的实现主要遵循 Botsch 等人的著作 Polygon Mesh Processing。</p><h3 id="11-多边形网格">1.1 多边形网格</h3><p>多边形网格是一致、有向的表面网格，包含一个或多个边界。面为简单多边形，边为线段。每条边连接两个顶点，由两个面共享。多边形网格可以有任意数量的连通分量和自相交。该包视多边形网格为二维流形。</p><h3 id="12-api">1.2 API</h3><p>该包遵循 CGAL and the Boost Graph Library 中描述的 BGL API，因此可以用于 Polyhedron_3、Surface_mesh 以及任何概念 FaceGraph 的模型。每个函数或类都详细说明了对输入多边形网格的要求。</p><p>命名参数用于处理可选参数。</p><h3 id="13-概述">1.3 概述</h3><p>略</p><h3 id="14-读写多边形网格">1.4 读写多边形网格</h3><p>该包中的函数，要求多边形网格为包 CGAL and the Boost Graph Library Reference 中定义的图概念的模型。页面 I/O Functions 提供了关于可用 I/O 函数的详细描述。此外，该包提供了函数 CGAL::Polygon_mesh_processing::IO::read_polygon_mesh()，若输入数据是非流形的，其可以执行一些修复操作。</p><h2 id="2-网格化">2 网格化</h2><p>表面面片可以被细化，通过插入新顶点和翻转边获得三角化。使用 Filling holes in meshes 提出的标准，面片边界附近的三角形密度由细化函数近似。网格的有效性通过翻转边实现。<del>仅当原始网格中不存在对边且未生成退化三角形时，才翻转边。</del></p><p>表面网格的区域可以通过光顺获得切向连续且平滑的表面面片。光顺区域定义为一系列重新定位的顶点。光顺步骤最小化具有边界约束的线性双拉普拉斯系统，</p><h3 id="21-api">2.1 API</h3><h3 id="22-网格化示例">2.2 网格化示例</h3><h2 id="3-共细化和布尔运算">3 共细化和布尔运算</h2><h3 id="31-定义">3.1 定义</h3><p><strong>共细化</strong>：给定两个三角形表面网格，细化两个网格使其相交折线成为两个细化网格中边的子集。</p><p><strong>表面三角网格包围体积</strong>：给定一个无自相交的闭合三角网格 tm，tm 的连通分量将三维空间划分为子空间。如果每个子空间仅位于 tm 的所有关联连通分量的一侧，则 tm 包围了一个体积。tm 的包围体积是位于 tm 的关联连通分量一侧的所有子空间的并集。</p><h3 id="32-共细化">3.2 共细化</h3><p>可以使用 CGAL::Polygon_mesh_processing::corefine() 对两个三角形表面网格进行共细分，其以两个三角形表面网格作为输入。如果提供约束边映射，属于输入网格交集的边被标记为受约束的。此外，如果在共细化时分割受约束的边，则子边也将标记为受约束。</p><h3 id="33-布尔运算">3.3 布尔运算</h3><p>两个三角形表面网格的共细化可用于计算体积布尔运算。给定两个三角形表面网格，CGAL::Polygon_mesh_processing::corefine_and_compute_union()、CGAL::Polygon_mesh_processing::corefine_and_compute_intersection() 和 CGAL::Polygon_mesh_processing::corefine_and_compute_difference() 分别计算体积的并、交和差。如果多个布尔运算必须同时计算，应调用函数 corefine_and_compute_boolean_operations()。</p><p>对于输入体积的拓扑没有限制。然而，为保证布尔运算是可能的，对于输入有一些要求。首先，输入网格无自相交。第二，输出为流形三角形表面网格。</p><h3 id="34-内核和输出有效性">3.4 内核和输出有效性</h3><p>如果输入网格的点属性映射来自精确谓词 CGAL 内核，共细化可以正确修改输入表面网格的拓扑。如果内核没有精确构造，输出表面网格的嵌入可能具有自相交。在连续运算的情况下，推荐使用具有精确谓词和精确构造内核（例如 CGAL::Exact_predicates_exact_constructions_kernel）的点属性。</p><p>实际上，这意味着使用精确谓词和不精确构造，边将在每个交点处被分割，但由于浮点数的精度有限，交点位置可能会出现自相交。</p><h3 id="35-裁剪">3.5 裁剪</h3><ul><li><p>CGAL::Polygon_mesh_processing::clip()</p><li><p>CGAL::Polygon_mesh_processing::split()</p></ul><h3 id="36-示例">3.6 示例</h3><h4 id="361-求交">3.6.1 求交</h4><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/Exact_predicates_inexact_constructions_kernel.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Surface_mesh.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polygon_mesh_processing/corefinement.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polygon_mesh_processing/IO/polygon_mesh_io.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span><span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Exact_predicates_inexact_constructions_kernel</span>   <span class="n">K</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Surface_mesh</span><span class="o">&lt;</span><span class="n">K</span><span class="o">::</span><span class="n">Point_3</span><span class="o">&gt;</span>                        <span class="n">Mesh</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="n">PMP</span> <span class="o">=</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polygon_mesh_processing</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">filename1</span> <span class="o">=</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">:</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">data_file_path</span><span class="p">(</span><span class="s">"meshes/blobby.off"</span><span class="p">);</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">filename2</span> <span class="o">=</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">?</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">:</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">data_file_path</span><span class="p">(</span><span class="s">"meshes/eight.off"</span><span class="p">);</span>
+  <span class="n">Mesh</span> <span class="n">mesh1</span><span class="p">,</span> <span class="n">mesh2</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">PMP</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">read_polygon_mesh</span><span class="p">(</span><span class="n">filename1</span><span class="p">,</span> <span class="n">mesh1</span><span class="p">)</span> <span class="o">||</span> <span class="o">!</span><span class="n">PMP</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">read_polygon_mesh</span><span class="p">(</span><span class="n">filename2</span><span class="p">,</span> <span class="n">mesh2</span><span class="p">))</span>
+  <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Invalid input."</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">Mesh</span> <span class="n">out</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">valid_union</span> <span class="o">=</span> <span class="n">PMP</span><span class="o">::</span><span class="n">corefine_and_compute_union</span><span class="p">(</span><span class="n">mesh1</span><span class="p">,</span><span class="n">mesh2</span><span class="p">,</span> <span class="n">out</span><span class="p">);</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">valid_union</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Union was successfully computed</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">write_polygon_mesh</span><span class="p">(</span><span class="s">"union.off"</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">parameters</span><span class="o">::</span><span class="n">stream_precision</span><span class="p">(</span><span class="mi">17</span><span class="p">));</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Union could not be computed</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h4 id="362-布尔运算和局部重网格化">3.6.2 布尔运算和局部重网格化</h4><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/Exact_predicates_inexact_constructions_kernel.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Surface_mesh.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polygon_mesh_processing/corefinement.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polygon_mesh_processing/IO/polygon_mesh_io.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polygon_mesh_processing/remesh.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/boost/graph/selection.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iterator&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+</span><span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Exact_predicates_inexact_constructions_kernel</span>   <span class="n">K</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Surface_mesh</span><span class="o">&lt;</span><span class="n">K</span><span class="o">::</span><span class="n">Point_3</span><span class="o">&gt;</span>                        <span class="n">Mesh</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">graph_traits</span><span class="o">&lt;</span><span class="n">Mesh</span><span class="o">&gt;::</span><span class="n">halfedge_descriptor</span>        <span class="n">halfedge_descriptor</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">graph_traits</span><span class="o">&lt;</span><span class="n">Mesh</span><span class="o">&gt;::</span><span class="n">edge_descriptor</span>            <span class="n">edge_descriptor</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">graph_traits</span><span class="o">&lt;</span><span class="n">Mesh</span><span class="o">&gt;::</span><span class="n">face_descriptor</span>            <span class="n">face_descriptor</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="n">PMP</span> <span class="o">=</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polygon_mesh_processing</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="n">params</span> <span class="o">=</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">parameters</span><span class="p">;</span>
+<span class="k">struct</span> <span class="nc">Vector_pmap_wrapper</span>
+<span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;&amp;</span> <span class="n">vect</span><span class="p">;</span>
+  <span class="n">Vector_pmap_wrapper</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="o">:</span> <span class="n">vect</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="k">friend</span> <span class="kt">bool</span> <span class="nf">get</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector_pmap_wrapper</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">,</span> <span class="n">face_descriptor</span> <span class="n">f</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">return</span> <span class="n">m</span><span class="p">.</span><span class="n">vect</span><span class="p">[</span><span class="n">f</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">friend</span> <span class="kt">void</span> <span class="nf">put</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector_pmap_wrapper</span><span class="o">&amp;</span> <span class="n">m</span><span class="p">,</span> <span class="n">face_descriptor</span> <span class="n">f</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">b</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">m</span><span class="p">.</span><span class="n">vect</span><span class="p">[</span><span class="n">f</span><span class="p">]</span><span class="o">=</span><span class="n">b</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">filename1</span> <span class="o">=</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">:</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">data_file_path</span><span class="p">(</span><span class="s">"meshes/blobby.off"</span><span class="p">);</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">filename2</span> <span class="o">=</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">?</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">:</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">data_file_path</span><span class="p">(</span><span class="s">"meshes/eight.off"</span><span class="p">);</span>
+  <span class="n">Mesh</span> <span class="n">mesh1</span><span class="p">,</span> <span class="n">mesh2</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">PMP</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">read_polygon_mesh</span><span class="p">(</span><span class="n">filename1</span><span class="p">,</span> <span class="n">mesh1</span><span class="p">)</span> <span class="o">||</span> <span class="o">!</span><span class="n">PMP</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">read_polygon_mesh</span><span class="p">(</span><span class="n">filename2</span><span class="p">,</span> <span class="n">mesh2</span><span class="p">))</span>
+  <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Invalid input."</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">//create a property on edges to indicate whether they are constrained</span>
+  <span class="n">Mesh</span><span class="o">::</span><span class="n">Property_map</span><span class="o">&lt;</span><span class="n">edge_descriptor</span><span class="p">,</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">is_constrained_map</span> <span class="o">=</span>
+    <span class="n">mesh1</span><span class="p">.</span><span class="n">add_property_map</span><span class="o">&lt;</span><span class="n">edge_descriptor</span><span class="p">,</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"e:is_constrained"</span><span class="p">,</span> <span class="nb">false</span><span class="p">).</span><span class="n">first</span><span class="p">;</span>
+  <span class="c1">// update mesh1 to contain the mesh bounding the difference</span>
+  <span class="c1">// of the two input volumes.</span>
+  <span class="kt">bool</span> <span class="n">valid_difference</span> <span class="o">=</span>
+    <span class="n">PMP</span><span class="o">::</span><span class="n">corefine_and_compute_difference</span><span class="p">(</span><span class="n">mesh1</span><span class="p">,</span>
+                                         <span class="n">mesh2</span><span class="p">,</span>
+                                         <span class="n">mesh1</span><span class="p">,</span>
+                                         <span class="n">params</span><span class="o">::</span><span class="n">default_values</span><span class="p">(),</span> <span class="c1">// default parameters for mesh1</span>
+                                         <span class="n">params</span><span class="o">::</span><span class="n">default_values</span><span class="p">(),</span> <span class="c1">// default parameters for mesh2</span>
+                                         <span class="n">params</span><span class="o">::</span><span class="n">edge_is_constrained_map</span><span class="p">(</span><span class="n">is_constrained_map</span><span class="p">));</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">valid_difference</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Difference was successfully computed</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">write_polygon_mesh</span><span class="p">(</span><span class="s">"difference.off"</span><span class="p">,</span> <span class="n">mesh1</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">parameters</span><span class="o">::</span><span class="n">stream_precision</span><span class="p">(</span><span class="mi">17</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">else</span>
+  <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Difference could not be computed</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// collect faces incident to a constrained edge</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">face_descriptor</span><span class="o">&gt;</span> <span class="n">selected_faces</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">is_selected</span><span class="p">(</span><span class="n">num_faces</span><span class="p">(</span><span class="n">mesh1</span><span class="p">),</span> <span class="nb">false</span><span class="p">);</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">edge_descriptor</span> <span class="n">e</span> <span class="o">:</span> <span class="n">edges</span><span class="p">(</span><span class="n">mesh1</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">is_constrained_map</span><span class="p">[</span><span class="n">e</span><span class="p">])</span>
+    <span class="p">{</span>
+      <span class="c1">// insert all faces incident to the target vertex</span>
+      <span class="k">for</span><span class="p">(</span><span class="n">halfedge_descriptor</span> <span class="n">h</span> <span class="o">:</span> <span class="n">halfedges_around_target</span><span class="p">(</span><span class="n">halfedge</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="n">mesh1</span><span class="p">),</span><span class="n">mesh1</span><span class="p">))</span>
+      <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">is_border</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">mesh1</span><span class="p">)</span> <span class="p">)</span>
+        <span class="p">{</span>
+          <span class="n">face_descriptor</span> <span class="n">f</span><span class="o">=</span><span class="n">face</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">mesh1</span><span class="p">);</span>
+          <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">is_selected</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="p">)</span>
+          <span class="p">{</span>
+            <span class="n">selected_faces</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+            <span class="n">is_selected</span><span class="p">[</span><span class="n">f</span><span class="p">]</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="c1">// increase the face selection</span>
+  <span class="n">CGAL</span><span class="o">::</span><span class="n">expand_face_selection</span><span class="p">(</span><span class="n">selected_faces</span><span class="p">,</span> <span class="n">mesh1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">Vector_pmap_wrapper</span><span class="p">(</span><span class="n">is_selected</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">back_inserter</span><span class="p">(</span><span class="n">selected_faces</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">selected_faces</span><span class="p">.</span><span class="n">size</span><span class="p">()</span>
+            <span class="o">&lt;&lt;</span> <span class="s">" faces were selected for the remeshing step</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  <span class="c1">// remesh the region around the intersection polylines</span>
+  <span class="n">PMP</span><span class="o">::</span><span class="n">isotropic_remeshing</span><span class="p">(</span><span class="n">selected_faces</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">mesh1</span><span class="p">,</span>
+                           <span class="n">params</span><span class="o">::</span><span class="n">edge_is_constrained_map</span><span class="p">(</span><span class="n">is_constrained_map</span><span class="p">));</span>
+  <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">write_polygon_mesh</span><span class="p">(</span><span class="s">"difference_remeshed.off"</span><span class="p">,</span> <span class="n">mesh1</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">parameters</span><span class="o">::</span><span class="n">stream_precision</span><span class="p">(</span><span class="mi">17</span><span class="p">));</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h4 id="363-连续运算的鲁棒性">3.6.3 连续运算的鲁棒性</h4><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/Exact_predicates_inexact_constructions_kernel.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Exact_predicates_exact_constructions_kernel.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Surface_mesh.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polygon_mesh_processing/corefinement.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polygon_mesh_processing/IO/polygon_mesh_io.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span><span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Exact_predicates_inexact_constructions_kernel</span> <span class="n">K</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Exact_predicates_exact_constructions_kernel</span> <span class="n">EK</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Surface_mesh</span><span class="o">&lt;</span><span class="n">K</span><span class="o">::</span><span class="n">Point_3</span><span class="o">&gt;</span> <span class="n">Mesh</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">graph_traits</span><span class="o">&lt;</span><span class="n">Mesh</span><span class="o">&gt;::</span><span class="n">vertex_descriptor</span> <span class="n">vertex_descriptor</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Mesh</span><span class="o">::</span><span class="n">Property_map</span><span class="o">&lt;</span><span class="n">vertex_descriptor</span><span class="p">,</span><span class="n">EK</span><span class="o">::</span><span class="n">Point_3</span><span class="o">&gt;</span> <span class="n">Exact_point_map</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="n">PMP</span> <span class="o">=</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polygon_mesh_processing</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="n">params</span> <span class="o">=</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">parameters</span><span class="p">;</span>
+<span class="k">struct</span> <span class="nc">Exact_vertex_point_map</span>
+<span class="p">{</span>
+  <span class="c1">// typedef for the property map</span>
+  <span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">property_traits</span><span class="o">&lt;</span><span class="n">Exact_point_map</span><span class="o">&gt;::</span><span class="n">value_type</span> <span class="n">value_type</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">property_traits</span><span class="o">&lt;</span><span class="n">Exact_point_map</span><span class="o">&gt;::</span><span class="n">reference</span> <span class="n">reference</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">property_traits</span><span class="o">&lt;</span><span class="n">Exact_point_map</span><span class="o">&gt;::</span><span class="n">key_type</span> <span class="n">key_type</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">read_write_property_map_tag</span> <span class="n">category</span><span class="p">;</span>
+  <span class="c1">// exterior references</span>
+  <span class="n">Exact_point_map</span> <span class="n">exact_point_map</span><span class="p">;</span>
+  <span class="n">Mesh</span><span class="o">*</span> <span class="n">tm_ptr</span><span class="p">;</span>
+  <span class="c1">// Converters</span>
+  <span class="n">CGAL</span><span class="o">::</span><span class="n">Cartesian_converter</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span> <span class="n">EK</span><span class="o">&gt;</span> <span class="n">to_exact</span><span class="p">;</span>
+  <span class="n">CGAL</span><span class="o">::</span><span class="n">Cartesian_converter</span><span class="o">&lt;</span><span class="n">EK</span><span class="p">,</span> <span class="n">K</span><span class="o">&gt;</span> <span class="n">to_input</span><span class="p">;</span>
+  <span class="n">Exact_vertex_point_map</span><span class="p">()</span>
+    <span class="o">:</span> <span class="n">tm_ptr</span><span class="p">(</span><span class="nb">nullptr</span><span class="p">)</span>
+  <span class="p">{}</span>
+  <span class="n">Exact_vertex_point_map</span><span class="p">(</span><span class="k">const</span> <span class="n">Exact_point_map</span><span class="o">&amp;</span> <span class="n">ep</span><span class="p">,</span> <span class="n">Mesh</span><span class="o">&amp;</span> <span class="n">tm</span><span class="p">)</span>
+    <span class="o">:</span> <span class="n">exact_point_map</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span>
+    <span class="p">,</span> <span class="n">tm_ptr</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tm</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">Mesh</span><span class="o">::</span><span class="n">Vertex_index</span> <span class="n">v</span> <span class="o">:</span> <span class="n">vertices</span><span class="p">(</span><span class="n">tm</span><span class="p">))</span>
+      <span class="n">exact_point_map</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">=</span><span class="n">to_exact</span><span class="p">(</span><span class="n">tm</span><span class="p">.</span><span class="n">point</span><span class="p">(</span><span class="n">v</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">friend</span>
+  <span class="n">reference</span> <span class="nf">get</span><span class="p">(</span><span class="k">const</span> <span class="n">Exact_vertex_point_map</span><span class="o">&amp;</span> <span class="n">map</span><span class="p">,</span> <span class="n">key_type</span> <span class="n">k</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">CGAL_precondition</span><span class="p">(</span><span class="n">map</span><span class="p">.</span><span class="n">tm_ptr</span><span class="o">!=</span><span class="nb">nullptr</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">map</span><span class="p">.</span><span class="n">exact_point_map</span><span class="p">[</span><span class="n">k</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">friend</span>
+  <span class="kt">void</span> <span class="nf">put</span><span class="p">(</span><span class="k">const</span> <span class="n">Exact_vertex_point_map</span><span class="o">&amp;</span> <span class="n">map</span><span class="p">,</span> <span class="n">key_type</span> <span class="n">k</span><span class="p">,</span> <span class="k">const</span> <span class="n">EK</span><span class="o">::</span><span class="n">Point_3</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">CGAL_precondition</span><span class="p">(</span><span class="n">map</span><span class="p">.</span><span class="n">tm_ptr</span><span class="o">!=</span><span class="nb">nullptr</span><span class="p">);</span>
+    <span class="n">map</span><span class="p">.</span><span class="n">exact_point_map</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">=</span><span class="n">p</span><span class="p">;</span>
+    <span class="c1">// create the input point from the exact one</span>
+    <span class="n">map</span><span class="p">.</span><span class="n">tm_ptr</span><span class="o">-&gt;</span><span class="n">point</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">=</span><span class="n">map</span><span class="p">.</span><span class="n">to_input</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">filename1</span> <span class="o">=</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">:</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">data_file_path</span><span class="p">(</span><span class="s">"meshes/blobby.off"</span><span class="p">);</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">filename2</span> <span class="o">=</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">?</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">:</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">data_file_path</span><span class="p">(</span><span class="s">"meshes/eight.off"</span><span class="p">);</span>
+  <span class="n">Mesh</span> <span class="n">mesh1</span><span class="p">,</span> <span class="n">mesh2</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">PMP</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">read_polygon_mesh</span><span class="p">(</span><span class="n">filename1</span><span class="p">,</span> <span class="n">mesh1</span><span class="p">)</span> <span class="o">||</span> <span class="o">!</span><span class="n">PMP</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">read_polygon_mesh</span><span class="p">(</span><span class="n">filename2</span><span class="p">,</span> <span class="n">mesh2</span><span class="p">))</span>
+  <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Invalid input."</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">Exact_point_map</span> <span class="n">mesh1_exact_points</span> <span class="o">=</span>
+    <span class="n">mesh1</span><span class="p">.</span><span class="n">add_property_map</span><span class="o">&lt;</span><span class="n">vertex_descriptor</span><span class="p">,</span><span class="n">EK</span><span class="o">::</span><span class="n">Point_3</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"v:exact_point"</span><span class="p">).</span><span class="n">first</span><span class="p">;</span>
+  <span class="n">Exact_point_map</span> <span class="n">mesh2_exact_points</span> <span class="o">=</span>
+    <span class="n">mesh2</span><span class="p">.</span><span class="n">add_property_map</span><span class="o">&lt;</span><span class="n">vertex_descriptor</span><span class="p">,</span><span class="n">EK</span><span class="o">::</span><span class="n">Point_3</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"v:exact_point"</span><span class="p">).</span><span class="n">first</span><span class="p">;</span>
+  <span class="n">Exact_vertex_point_map</span> <span class="nf">mesh1_vpm</span><span class="p">(</span><span class="n">mesh1_exact_points</span><span class="p">,</span> <span class="n">mesh1</span><span class="p">);</span>
+  <span class="n">Exact_vertex_point_map</span> <span class="nf">mesh2_vpm</span><span class="p">(</span><span class="n">mesh2_exact_points</span><span class="p">,</span> <span class="n">mesh2</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="n">PMP</span><span class="o">::</span><span class="n">corefine_and_compute_intersection</span><span class="p">(</span><span class="n">mesh1</span><span class="p">,</span>
+                                              <span class="n">mesh2</span><span class="p">,</span>
+                                              <span class="n">mesh1</span><span class="p">,</span>
+                                              <span class="n">params</span><span class="o">::</span><span class="n">vertex_point_map</span><span class="p">(</span><span class="n">mesh1_vpm</span><span class="p">),</span>
+                                              <span class="n">params</span><span class="o">::</span><span class="n">vertex_point_map</span><span class="p">(</span><span class="n">mesh2_vpm</span><span class="p">),</span>
+                                              <span class="n">params</span><span class="o">::</span><span class="n">vertex_point_map</span><span class="p">(</span><span class="n">mesh1_vpm</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">PMP</span><span class="o">::</span><span class="n">corefine_and_compute_union</span><span class="p">(</span><span class="n">mesh1</span><span class="p">,</span>
+                                         <span class="n">mesh2</span><span class="p">,</span>
+                                         <span class="n">mesh2</span><span class="p">,</span>
+                                         <span class="n">params</span><span class="o">::</span><span class="n">vertex_point_map</span><span class="p">(</span><span class="n">mesh1_vpm</span><span class="p">),</span>
+                                         <span class="n">params</span><span class="o">::</span><span class="n">vertex_point_map</span><span class="p">(</span><span class="n">mesh2_vpm</span><span class="p">),</span>
+                                         <span class="n">params</span><span class="o">::</span><span class="n">vertex_point_map</span><span class="p">(</span><span class="n">mesh2_vpm</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Intersection and union were successfully computed</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+      <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">write_polygon_mesh</span><span class="p">(</span><span class="s">"inter_union.off"</span><span class="p">,</span> <span class="n">mesh2</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">parameters</span><span class="o">::</span><span class="n">stream_precision</span><span class="p">(</span><span class="mi">17</span><span class="p">));</span>
+      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Union could not be computed</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Intersection could not be computed</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h2 id="4-孔洞填充">4 孔洞填充</h2><p>该包提供算法，用于填充三角形表面网格中的、或由描述折线的一系列点定义的闭合孔洞。</p><p>首先，在不引入任何新顶点的情况下，生成三角化孔洞边界的最大面片。选择最小化质量函数的面片。质量函数首先最小化三角形面片之间的最差二面角，然后以面片的总表面面积一决胜负。通过将搜索空间缩小到孔洞边界顶点的三维 Delaunay 三角剖分的面，同时根据上述质量标准搜索最佳面片，算法性能显著提高。</p><p>对于一些复杂的输入孔洞边界，生成的面片可能具有自相交。孔洞填充之后，可以细化和光顺生成的面片，通过网格化函数 CGAL::Polygon_mesh_processing::refine() 和 CGAL::Polygon_mesh_processing::fair()。</p><h3 id="41-api">4.1 API</h3><ul><li><p>triangulate_hole_polyline()：给定定义孔洞的顶点序列，三角化孔洞。</p><li><p>triangulate_hole()：给定网格上孔洞边界的边界半边，三角化孔洞。</p><li><p>triangulate_and_refine_hole()：除 triangulate_hole() 外，细化生成的面片。</p><li><p>triangulate_refine_and_fair_hole()：除 triangulate_and_refine_hole() 外，光顺生成的面片。</p></ul><h3 id="42-示例">4.2 示例</h3><h3 id="43-性能">4.3 性能</h3><h2 id="5-谓词">5 谓词</h2><h3 id="51-相交检测">5.1 相交检测</h3><ul><li><p>CGAL::Polygon_mesh_processing::do_intersect()</p><li><p>CGAL::Polygon_mesh_processing::intersecting_meshes()：记录范围内所有的相交网格对。</p></ul><h4 id="511-自相交">5.1.1 自相交</h4><ul><li><p>CGAL::Polygon_mesh_processing::does_self_intersect()：检测三角网格内的自相交。</p><li><p>CGAL::Polygon_mesh_processing::self_intersections()：记录所有相交三角形对。</p></ul><h4 id="512-自相交示例">5.1.2 自相交示例</h4><h3 id="52-三角网格的一侧">5.2 三角网格的一侧</h3><p>类 CGAL::Side_of_triangle_mesh 提供函子，用于检测查询点是否位于给定闭合三角网格域的内、外或边界上。</p><p>如果从一个点走到无穷远时，穿过奇数个表面，则该点位于三角网格域的边界上。输入三角网格无自相交与自包含。</p><p>算法可以处理具有多个连通分量的三角网格的情况。在自包含的情况下，执行射线相交奇偶性测试，执行不会失败。然而，用户应注意，谓词交替地将子体积视为输入三角网格的有界侧和无界侧。</p><h4 id="521-内部测试示例">5.2.1 内部测试示例</h4><h3 id="53-polyhedral-envelope-containment-check">5.3 Polyhedral Envelope Containment Check</h3><h4 id="531-多面体包络示例">5.3.1 多面体包络示例</h4><h3 id="54-形状谓词">5.4 形状谓词</h3><p>多边形网格中完全退化的元素在许多算法中是有问题的。该包提供检测此类不良元素的函数工具包。</p><ul><li><p>CGAL::Polygon_mesh_processing::is_degenerate_edge()，用于检测边是否退化（即其两个顶点是否共享相同几何位置）。</p><li><p>CGAL::Polygon_mesh_processing::is_degenerate_triangle_face()，用于检测面是否退化（即其三个顶点是否共线）。</p><li><p>CGAL::Polygon_mesh_processing::degenerate_edges()，用于收集一系列边中的退化边。</p><li><p>CGAL::Polygon_mesh_processing::degenerate_faces()，用于收集一系列面中的退化面。</p><li><p>CGAL::Polygon_mesh_processing::is_cap_triangle_face()</p><li><p>CGAL::Polygon_mesh_processing::is_needle_triangle_face()</p></ul><h3 id="55-表面定位函数">5.5 表面定位函数</h3><p>为了简化表面上点的操作，CGAL 提供了多种函数基于多边形网格上点的不同表示：点表示多边形网格的面和重心坐标三元组。该定义可以稳健处理位于同一面中的折线：例如，由同一面内四个点创建的两个三维线段应该相交，但由于计算不精确可能不相交。然而，可以通过重心坐标操纵这些点，并且在重心空间中计算交点将不会遇到相同的问题。此外，该定义仅取决于表面的本征维数（即 2），与表面嵌入的环境维度无关。</p><p>Location Functions 中的函数提供如下功能：给定点的定位计算（CGAL::Polygon_mesh_processing::locate()），给定点或射线、在网格上寻找最近点（CGAL::Polygon_mesh_processing::locate_with_AABB_tree()），以及基于位置的谓词（CGAL::Polygon_mesh_processing::is_on_face_border()）。</p><p>示例 Polygon_mesh_processing/locate_example.cpp 中介绍了其中的一些函数。</p><h2 id="6-朝向">6 朝向</h2><h2 id="7-组合修复">7 组合修复</h2><h3 id="71-多边形汤修复">7.1 多边形汤修复</h3><p>为了确保多边形汤是可定向的，并将其转换为可工作多边形网格，有必要预处理数据以移除组合和几何误差。该包提供以下函数：</p><ul><li><p>CGAL::Polygon_mesh_processing::merge_duplicate_points_in_polygon_soup()</p><li><p>CGAL::Polygon_mesh_processing::merge_duplicate_polygons_in_polygon_soup()</p><li><p>CGAL::Polygon_mesh_processing::remove_isolated_points_in_polygon_soup()</p></ul><h3 id="72-缝合">7.2 缝合</h3><p>处理多边形网格时，网格可能具有多个重复的边和顶点。</p><p>缝合多边形网格的边界可以修复一些重复，其包含两个主要步骤。首先，几何相同但重复的边界边被检测并配对。然后，缝合它们以移除重复的边和顶点，剩余边都恰好与两个面关联。</p><ul><li><p>CGAL::Polygon_mesh_processing::stitch_boundary_cycle()</p><li><p>CGAL::Polygon_mesh_processing::stitch_boundary_cycles()</p><li><p>CGAL::Polygon_mesh_processing::stitch_borders()</p></ul><p>输入网格应为流形，否则缝合不能保证成功。</p><h4 id="721-缝合示例">7.2.1 缝合示例</h4><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/Exact_predicates_inexact_constructions_kernel.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polyhedron_3.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polygon_mesh_processing/stitch_borders.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polygon_mesh_processing/IO/polygon_mesh_io.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span><span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Exact_predicates_inexact_constructions_kernel</span>   <span class="n">K</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">K</span><span class="o">&gt;</span>                                 <span class="n">Polyhedron</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="n">PMP</span> <span class="o">=</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polygon_mesh_processing</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">filename</span> <span class="o">=</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">:</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">data_file_path</span><span class="p">(</span><span class="s">"meshes/quads_to_stitch.off"</span><span class="p">);</span>
+  <span class="n">Polyhedron</span> <span class="n">mesh</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">PMP</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">read_polygon_mesh</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mesh</span><span class="p">))</span>
+  <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Invalid input."</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Before stitching : "</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s"> Number of vertices  :</span><span class="se">\t</span><span class="s">"</span> <span class="o">&lt;&lt;</span> <span class="n">mesh</span><span class="p">.</span><span class="n">size_of_vertices</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s"> Number of halfedges :</span><span class="se">\t</span><span class="s">"</span> <span class="o">&lt;&lt;</span> <span class="n">mesh</span><span class="p">.</span><span class="n">size_of_halfedges</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s"> Number of facets    :</span><span class="se">\t</span><span class="s">"</span> <span class="o">&lt;&lt;</span> <span class="n">mesh</span><span class="p">.</span><span class="n">size_of_facets</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">PMP</span><span class="o">::</span><span class="n">stitch_borders</span><span class="p">(</span><span class="n">mesh</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Stitching done : "</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s"> Number of vertices  :</span><span class="se">\t</span><span class="s">"</span> <span class="o">&lt;&lt;</span> <span class="n">mesh</span><span class="p">.</span><span class="n">size_of_vertices</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s"> Number of halfedges :</span><span class="se">\t</span><span class="s">"</span> <span class="o">&lt;&lt;</span> <span class="n">mesh</span><span class="p">.</span><span class="n">size_of_halfedges</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\t</span><span class="s"> Number of facets    :</span><span class="se">\t</span><span class="s">"</span> <span class="o">&lt;&lt;</span> <span class="n">mesh</span><span class="p">.</span><span class="n">size_of_facets</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">write_polygon_mesh</span><span class="p">(</span><span class="s">"mesh_stitched.off"</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">parameters</span><span class="o">::</span><span class="n">stream_precision</span><span class="p">(</span><span class="mi">17</span><span class="p">));</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h3 id="73-多边形网格流形">7.3 多边形网格流形</h3><h3 id="74-边界循环中的重复顶点">7.4 边界循环中的重复顶点</h3><h2 id="8-计算法线">8 计算法线</h2><p>该包提供计算多边形网格法线的方法。</p><ul><li><p>CGAL::Polygon_mesh_processing::compute_face_normal()</p><li><p>CGAL::Polygon_mesh_processing::compute_vertex_normal()</p><li><p>CGAL::Polygon_mesh_processing::compute_face_normals()</p><li><p>CGAL::Polygon_mesh_processing::compute_vertex_normals()</p><li><p>CGAL::Polygon_mesh_processing::compute_normals()</p></ul><p>属性映射用于记录计算的法线。</p><h3 id="81-法线计算示例">8.1 法线计算示例</h3><h2 id="9-切片">9 切片</h2><p><del>CGAL::Polygon_mesh_slicer 是一种运算，对三角形表面网格与平面进行求交。</del>其将交集记为一组折线，因为交集可能包含多组连通分量。交集为单个点的退化情况已被处理。</p><h3 id="91-示例">9.1 示例</h3><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/Exact_predicates_inexact_constructions_kernel.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Surface_mesh.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polygon_mesh_slicer.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polygon_mesh_processing/IO/polygon_mesh_io.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/AABB_halfedge_graph_segment_primitive.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/AABB_tree.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/AABB_traits.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;list&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+</span><span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Exact_predicates_inexact_constructions_kernel</span>   <span class="n">K</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Surface_mesh</span><span class="o">&lt;</span><span class="n">K</span><span class="o">::</span><span class="n">Point_3</span><span class="o">&gt;</span>                        <span class="n">Mesh</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">K</span><span class="o">::</span><span class="n">Point_3</span><span class="o">&gt;</span>                               <span class="n">Polyline_type</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">list</span><span class="o">&lt;</span><span class="n">Polyline_type</span><span class="o">&gt;</span>                              <span class="n">Polylines</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">AABB_halfedge_graph_segment_primitive</span><span class="o">&lt;</span><span class="n">Mesh</span><span class="o">&gt;</span>     <span class="n">HGSP</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">AABB_traits</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span> <span class="n">HGSP</span><span class="o">&gt;</span>                            <span class="n">AABB_traits</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">AABB_tree</span><span class="o">&lt;</span><span class="n">AABB_traits</span><span class="o">&gt;</span>                          <span class="n">AABB_tree</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="n">PMP</span> <span class="o">=</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polygon_mesh_processing</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">filename</span> <span class="o">=</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">:</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">data_file_path</span><span class="p">(</span><span class="s">"meshes/eight.off"</span><span class="p">);</span>
+  <span class="n">Mesh</span> <span class="n">mesh</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">PMP</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">read_polygon_mesh</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mesh</span><span class="p">)</span> <span class="o">||</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">is_empty</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span> <span class="o">||</span> <span class="o">!</span><span class="n">CGAL</span><span class="o">::</span><span class="n">is_triangle_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">))</span>
+  <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Invalid input."</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// Slicer constructor from the mesh</span>
+  <span class="n">CGAL</span><span class="o">::</span><span class="n">Polygon_mesh_slicer</span><span class="o">&lt;</span><span class="n">Mesh</span><span class="p">,</span> <span class="n">K</span><span class="o">&gt;</span> <span class="n">slicer</span><span class="p">(</span><span class="n">mesh</span><span class="p">);</span>
+  <span class="n">Polylines</span> <span class="n">polylines</span><span class="p">;</span>
+  <span class="n">slicer</span><span class="p">(</span><span class="n">K</span><span class="o">::</span><span class="n">Plane_3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">back_inserter</span><span class="p">(</span><span class="n">polylines</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"At z = 0.4, the slicer intersects "</span>
+            <span class="o">&lt;&lt;</span> <span class="n">polylines</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" polylines"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">polylines</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+  <span class="n">slicer</span><span class="p">(</span><span class="n">K</span><span class="o">::</span><span class="n">Plane_3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">back_inserter</span><span class="p">(</span><span class="n">polylines</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"At z = -0.2, the slicer intersects "</span>
+            <span class="o">&lt;&lt;</span> <span class="n">polylines</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" polylines"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">polylines</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+  <span class="c1">// Use the Slicer constructor from a pre-built AABB_tree</span>
+  <span class="n">AABB_tree</span> <span class="nf">tree</span><span class="p">(</span><span class="n">edges</span><span class="p">(</span><span class="n">mesh</span><span class="p">).</span><span class="n">first</span><span class="p">,</span> <span class="n">edges</span><span class="p">(</span><span class="n">mesh</span><span class="p">).</span><span class="n">second</span><span class="p">,</span> <span class="n">mesh</span><span class="p">);</span>
+  <span class="n">CGAL</span><span class="o">::</span><span class="n">Polygon_mesh_slicer</span><span class="o">&lt;</span><span class="n">Mesh</span><span class="p">,</span> <span class="n">K</span><span class="o">&gt;</span> <span class="n">slicer_aabb</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">tree</span><span class="p">);</span>
+  <span class="n">slicer_aabb</span><span class="p">(</span><span class="n">K</span><span class="o">::</span><span class="n">Plane_3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">back_inserter</span><span class="p">(</span><span class="n">polylines</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"At z = 0.4, the slicer intersects "</span>
+            <span class="o">&lt;&lt;</span> <span class="n">polylines</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" polylines"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">polylines</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h2 id="10-连通分量">10 连通分量</h2><p>该包提供函数以枚举和存储多边形网格的连通分量。连通分量可以是闭合的且在几何上分离，也可以通过边界或用户指定的约束边分离。</p><p>首先，CGAL::Polygon_mesh_processing::connected_component() 收集所有与参数面属于同一连通分量的所有面。</p><p>其次，CGAL::Polygon_mesh_processing::connected_components() 收集所有连通分量，用不同连通分量的索引填充属性映射。</p><p>CGAL::Polygon_mesh_processing::keep_connected_components() 和 CGAL::Polygon_mesh_processing::remove_connected_components() 允许用户保留和移除选定的连通分量。</p><p>当一个三角网格没有边界时，其将三维空间划分为不同的体。<del>CGAL::Polygon_mesh_processing::volume_connected_components() 用于为每个面分配由连通分量定义的体的 ID。</del></p><p>最后，快速移除一些连通分量很有用。CGAL::Polygon_mesh_processing::keep_largest_connected_components() 使用户保留给定数目的最大连通分量。连通分量的大小由面的大小之和决定，默认面的大小为 1。CGAL::Polygon_mesh_processing::keep_largest_connected_components() 也可以用于丢弃大小低于用户设定阈值的连通分量。</p><p>此外，CGAL::Polygon_mesh_processing::split_connected_components() 允许用户将多边形网格的连通分量分割为多个多边形网格。</p><h3 id="101-示例">10.1 示例</h3><h2 id="11-豪斯多夫距离">11 豪斯多夫距离</h2><h2 id="12-特征检测">12 特征检测</h2><h2 id="13-实现历史">13 实现历史</h2></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/lazy.github.io/categories/cg/'>CG</a>, <a href='/lazy.github.io/categories/geometry/'>GEOMETRY</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/lazy.github.io/tags/cgal/" class="post-tag no-text-decoration" >cgal</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> by the author.</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=CGAL 5.5 多边形网格处理 - lazy&url=https://flyingpika.github.io/lazy.github.io/posts/p-m-p/" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=CGAL 5.5 多边形网格处理 - lazy&u=https://flyingpika.github.io/lazy.github.io/posts/p-m-p/" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://telegram.me/share?text=CGAL 5.5 多边形网格处理 - lazy&url=https://flyingpika.github.io/lazy.github.io/posts/p-m-p/" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i class="fa-fw fas fa-link small" onclick="copyLink()" data-toggle="tooltip" data-placement="top" title="Copy link"></i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted topbar-down"><div class="access"><div id="access-lastmod" class="post"> <span>Recent Update</span><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/lazy.github.io/posts/unity-shortcut-key/">Unity 2020.3.22f1 快捷键</a><li><a href="/lazy.github.io/posts/surface-mesh/">CGAL 5.3 表面网格</a><li><a href="/lazy.github.io/posts/3d-polyhedral-surface/">CGAL 5.3 三维多面体表面</a><li><a href="/lazy.github.io/posts/snow/">A Material Point Method for Snow Simulation</a><li><a href="/lazy.github.io/posts/mixed-integer-quadrangulation/">Mixed-Integer Quadrangulation</a></ul></div><div id="access-tags"> <span>Trending Tags</span><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/lazy.github.io/tags/cgal/">cgal</a> <a class="post-tag" href="/lazy.github.io/tags/taichi/">taichi</a> <a class="post-tag" href="/lazy.github.io/tags/paper/">paper</a> <a class="post-tag" href="/lazy.github.io/tags/blender/">blender</a> <a class="post-tag" href="/lazy.github.io/tags/imgui/">imgui</a> <a class="post-tag" href="/lazy.github.io/tags/moment-of-inertia/">moment of inertia</a> <a class="post-tag" href="/lazy.github.io/tags/unity/">unity</a> <a class="post-tag" href="/lazy.github.io/tags/%E5%8D%9A%E5%AE%A2/">博客</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"> <span class="pl-3 pt-2 mb-2">Contents</span><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="post-extend-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/lazy.github.io/posts/surface-mesh/"><div class="card-body"> <span class="timeago small" > Aug 26, 2021 <i class="unloaded">2021-08-26T00:02:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>CGAL 5.3 表面网格</h3><div class="text-muted small"><p> https://doc.cgal.org/latest/Surface_mesh/index.html#Chapter_3D_Surface_mesh 类 Surface_mesh 是一个半边数据结构的实现，用于表示多面体表面。它是包 Halfedge Data Structures 和包 3D Polyhedral Surface 的替代。主要区别在于它基于索引而不是指针。此外，向顶点、...</p></div></div></a></div><div class="card"> <a href="/lazy.github.io/posts/halfedge-data-structures/"><div class="card-body"> <span class="timeago small" > Aug 26, 2021 <i class="unloaded">2021-08-26T00:00:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>CGAL 5.3 半边数据结构</h3><div class="text-muted small"><p> https://doc.cgal.org/latest/HalfedgeDS/index.html#Chapter_Halfedge_Data_Structures 1 介绍 半边数据结构是以边为中心的数据结构，能够维护顶点、边和面的关联信息。每个边被分解为两个相反方向的半边。每个半边存储一个关联面和关联顶点。对于每个面和每个顶点，存储一个关联半边。半边数据结构的简化变体可能省略一些信息...</p></div></div></a></div><div class="card"> <a href="/lazy.github.io/posts/3d-polyhedral-surface/"><div class="card-body"> <span class="timeago small" > Aug 26, 2021 <i class="unloaded">2021-08-26T00:01:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>CGAL 5.3 三维多面体表面</h3><div class="text-muted small"><p> https://doc.cgal.org/latest/Polyhedron/index.html#Chapter_3D_Polyhedral_Surfaces 1 介绍 三维多面体表面由顶点、边、面和它们之间的邻接关系组成。下面的组织是半边数据结构，其限制可表示的表面类别为可定向二维流形（有边界和无边界）。如果表面是闭合的，我们称之为多面体。 多面体表面被视为容器类，它管理顶点、半边...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/lazy.github.io/posts/geometry-images/" class="btn btn-outline-primary" prompt="Older"><p>Geometry Images</p></a> <a href="/lazy.github.io/posts/aabb-tree/" class="btn btn-outline-primary" prompt="Newer"><p>CGAL 5.5 三维快速相交和距离计算（AABB Tree）</p></a></div></div></div></div><footer class="d-flex w-100 justify-content-center"><div class="d-flex justify-content-between align-items-center"><div class="footer-left"><p class="mb-0"> © 2023 <a href="https://github.com/flyingPika">lazy</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><h4 class="text-muted mb-4">Trending Tags</h4><a class="post-tag" href="/lazy.github.io/tags/cgal/">cgal</a> <a class="post-tag" href="/lazy.github.io/tags/taichi/">taichi</a> <a class="post-tag" href="/lazy.github.io/tags/paper/">paper</a> <a class="post-tag" href="/lazy.github.io/tags/blender/">blender</a> <a class="post-tag" href="/lazy.github.io/tags/imgui/">imgui</a> <a class="post-tag" href="/lazy.github.io/tags/moment-of-inertia/">moment of inertia</a> <a class="post-tag" href="/lazy.github.io/tags/unity/">unity</a> <a class="post-tag" href="/lazy.github.io/tags/%E5%8D%9A%E5%AE%A2/">博客</a></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.7.3/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/lazy.github.io/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="https://flyingPika.github.io{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script>

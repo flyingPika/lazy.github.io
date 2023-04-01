@@ -1,0 +1,785 @@
+<!DOCTYPE html><html lang="zh-CN" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Jekyll v4.3.2" /><meta property="og:title" content="CGAL 5.3 三维多面体表面" /><meta property="og:locale" content="zh_CN" /><meta name="description" content="https://doc.cgal.org/latest/Polyhedron/index.html#Chapter_3D_Polyhedral_Surfaces" /><meta property="og:description" content="https://doc.cgal.org/latest/Polyhedron/index.html#Chapter_3D_Polyhedral_Surfaces" /><link rel="canonical" href="https://flyingpika.github.io/lazy.github.io/posts/3d-polyhedral-surface/" /><meta property="og:url" content="https://flyingpika.github.io/lazy.github.io/posts/3d-polyhedral-surface/" /><meta property="og:site_name" content="lazy" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2021-08-26T00:01:00+08:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="CGAL 5.3 三维多面体表面" /><meta name="twitter:site" content="@twitter_username" /><meta name="google-site-verification" content="google_meta_tag_verification" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-08-18T10:37:56+08:00","datePublished":"2021-08-26T00:01:00+08:00","description":"https://doc.cgal.org/latest/Polyhedron/index.html#Chapter_3D_Polyhedral_Surfaces","headline":"CGAL 5.3 三维多面体表面","mainEntityOfPage":{"@type":"WebPage","@id":"https://flyingpika.github.io/lazy.github.io/posts/3d-polyhedral-surface/"},"url":"https://flyingpika.github.io/lazy.github.io/posts/3d-polyhedral-surface/"}</script><title>CGAL 5.3 三维多面体表面 | lazy</title><link rel="apple-touch-icon" sizes="180x180" href="/lazy.github.io/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/lazy.github.io/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/lazy.github.io/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/lazy.github.io/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/lazy.github.io/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="lazy"><meta name="application-name" content="lazy"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/lazy.github.io/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/lazy.github.io/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script> <script defer src="https://cdn.jsdelivr.net/combine/npm/popper.js@1.15.0,npm/bootstrap@4/dist/js/bootstrap.min.js"></script> <script async src="https://cdn.jsdelivr.net/combine/npm/lozad/dist/lozad.min.js,npm/magnific-popup@1/dist/jquery.magnific-popup.min.js"></script> <script defer src="/lazy.github.io/assets/js/dist/post.min.js"></script> <script defer src="/lazy.github.io/app.js"></script> <script defer src="https://www.googletagmanager.com/gtag/js?id="></script> <script> document.addEventListener("DOMContentLoaded", function(event) { window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', ''); }); </script><body data-spy="scroll" data-target="#toc"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/lazy.github.io/" alt="avatar" class="mx-auto"> <img src="/lazy.github.io/assets/img/avatar/avatar.jpeg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/lazy.github.io/">lazy</a></div><div class="site-subtitle font-italic">Welcome home, ashen one. Speak thine heart's desire.</div></div><ul class="w-100"><li class="nav-item"> <a href="/lazy.github.io/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/lazy.github.io/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/lazy.github.io/tags/" class="nav-link"> <i class="fa-fw fas fa-tags ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/lazy.github.io/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/lazy.github.io/about/" class="nav-link"> <i class="fa-fw fas fa-info ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center"> <a href="https://github.com/flyingPika" aria-label="github" class="order-3" target="_blank" rel="noopener"> <i class="fab fa-github-alt"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['814833529','qq.com'].join('@')" aria-label="email" class="order-4" > <i class="fas fa-envelope"></i> </a> <a href="https://www.imdb.com/user/ur88183274/ratings?ref_=nv_usr_rt_4" aria-label="imdb" class="order-5" target="_blank" rel="noopener"> <i class="fab fa-imdb"></i> </a> <a href="/lazy.github.io/feed.xml" aria-label="rss" class="order-6" > <i class="fas fa-rss"></i> </a> <span class="icon-border order-2"></span> <span id="mode-toggle-wrapper" class="order-1"> <i class="mode-toggle fas fa-adjust"></i> <script type="text/javascript"> class ModeToggle { static get MODE_KEY() { return "mode"; } static get DARK_MODE() { return "dark"; } static get LIGHT_MODE() { return "light"; } constructor() { if (this.hasMode) { if (this.isDarkMode) { if (!this.isSysDarkPrefer) { this.setDark(); } } else { if (this.isSysDarkPrefer) { this.setLight(); } } } var self = this; /* always follow the system prefers */ this.sysDarkPrefers.addListener(function() { if (self.hasMode) { if (self.isDarkMode) { if (!self.isSysDarkPrefer) { self.setDark(); } } else { if (self.isSysDarkPrefer) { self.setLight(); } } self.clearMode(); } self.updateMermaid(); }); } /* constructor() */ setDark() { $('html').attr(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); } setLight() { $('html').attr(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); } clearMode() { $('html').removeAttr(ModeToggle.MODE_KEY); sessionStorage.removeItem(ModeToggle.MODE_KEY); } get sysDarkPrefers() { return window.matchMedia("(prefers-color-scheme: dark)"); } get isSysDarkPrefer() { return this.sysDarkPrefers.matches; } get isDarkMode() { return this.mode == ModeToggle.DARK_MODE; } get isLightMode() { return this.mode == ModeToggle.LIGHT_MODE; } get hasMode() { return this.mode != null; } get mode() { return sessionStorage.getItem(ModeToggle.MODE_KEY); } /* get the current mode on screen */ get modeStatus() { if (this.isDarkMode || (!this.hasMode && this.isSysDarkPrefer) ) { return ModeToggle.DARK_MODE; } else { return ModeToggle.LIGHT_MODE; } } updateMermaid() { if (typeof mermaid !== "undefined") { let expectedTheme = (this.modeStatus === ModeToggle.DARK_MODE? "dark" : "default"); let config = { theme: expectedTheme }; /* re-render the SVG › <https://github.com/mermaid-js/mermaid/issues/311#issuecomment-332557344> */ $(".mermaid").each(function() { let svgCode = $(this).prev().children().html(); $(this).removeAttr("data-processed"); $(this).html(svgCode); }); mermaid.initialize(config); mermaid.init(undefined, ".mermaid"); } } flipMode() { if (this.hasMode) { if (this.isSysDarkPrefer) { if (this.isLightMode) { this.clearMode(); } else { this.setLight(); } } else { if (this.isDarkMode) { this.clearMode(); } else { this.setDark(); } } } else { if (this.isSysDarkPrefer) { this.setLight(); } else { this.setDark(); } } this.updateMermaid(); } /* flipMode() */ } /* ModeToggle */ let toggle = new ModeToggle(); $(".mode-toggle").click(function() { toggle.flipMode(); }); </script> </span></div></div><div id="topbar-wrapper" class="row justify-content-center topbar-down"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/lazy.github.io/"> Posts </a> </span> <span>CGAL 5.3 三维多面体表面</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> <i class="fa fa-times-circle fa-fw" id="search-cleaner"></i> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="post-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>CGAL 5.3 三维多面体表面</h1><div class="post-meta text-muted d-flex flex-column"><div> <span class="semi-bold"> lazy </span> <span class="timeago " data-toggle="tooltip" data-placement="bottom" title="Thu, Aug 26, 2021, 12:01 AM +0800" prep="on" > Aug 26, 2021 <i class="unloaded">2021-08-26T00:01:00+08:00</i> </span></div><div> <span> <span class="timeago lastmod" data-toggle="tooltip" data-placement="bottom" title="Thu, Aug 18, 2022, 10:37 AM +0800" prefix="Updated " > Aug 18, 2022 <i class="unloaded">2022-08-18T10:37:56+08:00</i> </span> </span> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="5220 words">29 min</span></div></div><div class="post-content"><p><a href="https://doc.cgal.org/latest/Polyhedron/index.html#Chapter_3D_Polyhedral_Surfaces">https://doc.cgal.org/latest/Polyhedron/index.html#Chapter_3D_Polyhedral_Surfaces</a></p><h2 id="1-介绍">1 介绍</h2><p>三维多面体表面由顶点、边、面和它们之间的邻接关系组成。下面的组织是半边数据结构，其限制可表示的表面类别为可定向二维流形（有边界和无边界）。如果表面是闭合的，我们称之为多面体。</p><p>多面体表面被视为容器类，它管理顶点、半边、面以及关联，并且维护它们的组合完整性。它基于半边数据结构的高度灵活设计。然而，多面体表面可以在不知道底层设计的情况下使用和理解。本章的一些例子也会逐步介绍这种灵活性的首次应用。</p><h2 id="2-定义">2 定义</h2><p>三维多面体表面 Polyhedron_3<PolyhedronTraits_3> 包含顶点 V、边 E、面 F 和它们的邻接关系。每个边使用两个相反方向的半边表示。用半边存储的关联如下图所示。</PolyhedronTraits_3></p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/lazy.github.io/assets/img/posts/2021-08-26/halfedge_small.png" alt="图1" /> <em>图1</em></p><p>顶点表示空间中的点，边为两个端点间的直线段，面为无孔的平面多边形。面由沿边界的半边循环序列定义。多面体表面本身可以有孔。沿着孔的边界的半边称为边界半边，并且没有邻接面。一条边为边界边，若其某一半边为边界半边。表面不包含边界半边，则为闭合的。闭合表面是三维多面体的边界表示。依照惯例，从多面体外部看，半边沿面的逆时针方向。<del>这意味着半边沿顶点顺时针方向</del>。尽管没有定义闭合的物体，但由半边方向定义的面的实体边的概念，扩展到了有边界的多面体表面。考虑面的法向量，其指向外（遵循右手定则）。</p><p>严格的定义见参考文献。该定义的一个含义是，多面体表面总是可定向的，并且是具有边界的定向二维流形。另一含义是，避免自交的最小可表示表面为三角形（有边界的多面体表面）或四面体（多面体）。定向二维流形的边界表示在欧拉操作下封闭。它们通过在表面上创建或闭合孔的操作扩展。</p><p>除关联关系外，其他相交不允许出现。然而，由于自相交难以有效检查，这不能在操作下自动验证。Polyhedron_3<PolyhedronTraits_3> 只维护多面体表面的组合完整性，并且不考虑点的坐标或其它几何信息。</PolyhedronTraits_3></p><p>Polyhedron_3<PolyhedronTraits_3> 既可以表示多面体表面，也可以表示多面体。接口的设计方式使得容易忽略边界边、只作用于多面体。</PolyhedronTraits_3></p><h2 id="3-示例程序">3 示例程序</h2><p>多面体表面基于半边数据结构的高度灵活设计。灵活性示例见第5节。这种设计不是理解下面示例的前提条件。高级示例见第6节。</p><h3 id="31-first-example-using-defaults">3.1 First Example Using Defaults</h3><p>第一个例子使用内核作为 Traits 类初始化多面体。它创建了一个四面体并且在 Halfedge_handle 中存储其中一个半边的引用。句柄用于保存对半边、顶点和面的引用，以备将来使用。又有 Halfedge_iterator 用于枚举半边。这种迭代器可以在任何需要句柄的地方使用。常量多面体也分别提供了 Halfedge_const_handle 和 Halfedge_const_iterator，以及类似的、以 Vertex_ 和 Facet_ 为前缀的句柄和迭代器。</p><p>该实例继续测试半边是否引用四面体。测试检查半边 h 所指的连通分量，而不是整个多面体表面。这个例子只适用于多面体表面的组合级别。下一个例子添加几何元素。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/Simple_cartesian.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polyhedron_3.h&gt;</span><span class="cp">
+</span><span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Simple_cartesian</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span>     <span class="n">Kernel</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">Kernel</span><span class="o">&gt;</span>         <span class="n">Polyhedron</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">Halfedge_handle</span>        <span class="n">Halfedge_handle</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Polyhedron</span> <span class="n">P</span><span class="p">;</span>
+    <span class="n">Halfedge_handle</span> <span class="n">h</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="n">make_tetrahedron</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">P</span><span class="p">.</span><span class="n">is_tetrahedron</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h3 id="32-example-with-geometry-in-vertices">3.2 Example with Geometry in Vertices</h3><p>我们在四面体的构造中添加几何元素。四个点作为参数被传递给构造函数。该示例还演示了顶点迭代器的使用和对顶点中点的访问。注意访问符号 v-&gt;point()。类似地，所有存储在顶点、半边和面中的信息可以通过句柄或迭代器的成员函数访问。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/Simple_cartesian.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polyhedron_3.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Simple_cartesian</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span>     <span class="n">Kernel</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Kernel</span><span class="o">::</span><span class="n">Point_3</span>                    <span class="n">Point_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">Kernel</span><span class="o">&gt;</span>         <span class="n">Polyhedron</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">Vertex_iterator</span>        <span class="n">Vertex_iterator</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Point_3</span> <span class="n">p</span><span class="p">(</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+    <span class="n">Point_3</span> <span class="n">q</span><span class="p">(</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+    <span class="n">Point_3</span> <span class="n">r</span><span class="p">(</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+    <span class="n">Point_3</span> <span class="n">s</span><span class="p">(</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+    <span class="n">Polyhedron</span> <span class="n">P</span><span class="p">;</span>
+    <span class="n">P</span><span class="p">.</span><span class="n">make_tetrahedron</span><span class="p">(</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+    <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">set_ascii_mode</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span> <span class="n">Vertex_iterator</span> <span class="n">v</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="n">vertices_begin</span><span class="p">();</span> <span class="n">v</span> <span class="o">!=</span> <span class="n">P</span><span class="p">.</span><span class="n">vertices_end</span><span class="p">();</span> <span class="o">++</span><span class="n">v</span><span class="p">)</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">v</span><span class="o">-&gt;</span><span class="n">point</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p>为方便起见，多面体提供了点迭代器。通过使用 std::copy 和输出流迭代适配器，上面的 for 循环可以简化为单个语句。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span> <span class="n">P</span><span class="p">.</span><span class="n">points_begin</span><span class="p">(),</span> <span class="n">P</span><span class="p">.</span><span class="n">points_end</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream_iterator</span><span class="o">&lt;</span><span class="n">Point_3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">));</span>
+</pre></table></code></div></div><h3 id="33-example-for-affine-transformation">3.3 Example for Affine Transformation</h3><p>仿射变换 A 可以作为变换点的函子，并且可以为多面体表面定义方便的点迭代器。所以，假设我们只想变换多面体 P 的点的坐标，std::transform 可以在一行中完成。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="n">std</span><span class="o">::</span><span class="n">transform</span><span class="p">(</span> <span class="n">P</span><span class="p">.</span><span class="n">points_begin</span><span class="p">(),</span> <span class="n">P</span><span class="p">.</span><span class="n">points_end</span><span class="p">(),</span> <span class="n">P</span><span class="p">.</span><span class="n">points_begin</span><span class="p">(),</span> <span class="n">A</span><span class="p">);</span>
+</pre></table></code></div></div><h3 id="34-example-computing-plane-equations">3.4 Example Computing Plane Equations</h3><p>多面体表面已经具备为每个面存储平面方程的条件，但它不提供计算平面方程的函数。</p><p>这个例子计算多面体表面的平面方程。实际的计算由 Plane_equtation 函子实现。根据算术（精确/不精确）和面的形状（凸/非凸），不同的方法是有用的。我们这里假设严格的凸面和精确的算术。在我们的例子中，使用 int 坐标的齐次表示是充分的。程序的输出是四面体的四个平面方程。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/Simple_cartesian.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polyhedron_3.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+</span><span class="k">struct</span> <span class="nc">Plane_equation</span> <span class="p">{</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Facet</span><span class="p">&gt;</span>
+    <span class="k">typename</span> <span class="n">Facet</span><span class="o">::</span><span class="n">Plane_3</span> <span class="k">operator</span><span class="p">()(</span> <span class="n">Facet</span><span class="o">&amp;</span> <span class="n">f</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">typename</span> <span class="n">Facet</span><span class="o">::</span><span class="n">Halfedge_handle</span> <span class="n">h</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">halfedge</span><span class="p">();</span>
+        <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Facet</span><span class="o">::</span><span class="n">Plane_3</span>  <span class="n">Plane</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">Plane</span><span class="p">(</span> <span class="n">h</span><span class="o">-&gt;</span><span class="n">vertex</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">point</span><span class="p">(),</span>
+                     <span class="n">h</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">vertex</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">point</span><span class="p">(),</span>
+                     <span class="n">h</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">vertex</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">point</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Simple_cartesian</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">Kernel</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Kernel</span><span class="o">::</span><span class="n">Point_3</span>                <span class="n">Point_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Kernel</span><span class="o">::</span><span class="n">Plane_3</span>                <span class="n">Plane_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">Kernel</span><span class="o">&gt;</span>     <span class="n">Polyhedron</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Point_3</span> <span class="n">p</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">Point_3</span> <span class="n">q</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">Point_3</span> <span class="n">r</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">Point_3</span> <span class="n">s</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">Polyhedron</span> <span class="n">P</span><span class="p">;</span>
+    <span class="n">P</span><span class="p">.</span><span class="n">make_tetrahedron</span><span class="p">(</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">transform</span><span class="p">(</span> <span class="n">P</span><span class="p">.</span><span class="n">facets_begin</span><span class="p">(),</span> <span class="n">P</span><span class="p">.</span><span class="n">facets_end</span><span class="p">(),</span> <span class="n">P</span><span class="p">.</span><span class="n">planes_begin</span><span class="p">(),</span> <span class="n">Plane_equation</span><span class="p">());</span>  <span class="c1">// ???</span>
+    <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">set_pretty_mode</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">);</span>  <span class="c1">// ??????????????????????????</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span> <span class="n">P</span><span class="p">.</span><span class="n">planes_begin</span><span class="p">(),</span> <span class="n">P</span><span class="p">.</span><span class="n">planes_end</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream_iterator</span><span class="o">&lt;</span><span class="n">Plane_3</span><span class="o">&gt;</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">));</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h3 id="35-example-with-a-vector-instead-of-a-list-representation">3.5 Example with a Vector Instead of a List Representation</h3><p>多面体类模板实际上有四个参数，其中三个有默认值。在上面的例子中，显式地使用三个参数的默认值（忽略第四个参数，它是容器类的标准分配器），多面体的定义如下：</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span> <span class="n">Traits</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_items_3</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_default</span><span class="o">&gt;</span> <span class="n">Polyhedron</span><span class="p">;</span>
+</pre></table></code></div></div><p>Polyhedron_items_3 包含用于顶点、边和面的类型。HalfedgeDS_default 定义了所用的半边数据结构，默认基于列表，另一种选择是基于向量。</p><p>当剩余空间不足时，基于向量的表示会自动改变大小。</p><p>注意，触发调整大小操作的是多面体，而不是底层的半边数据结构。因为调整大小操作需要满足只有多面体能保证的前提条件，例如有效索引。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/Simple_cartesian.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_vector.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polyhedron_3.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Simple_cartesian</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">Kernel</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Kernel</span><span class="o">::</span><span class="n">Point_3</span> <span class="n">Point_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">Kernel</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_items_3</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_vector</span><span class="o">&gt;</span> <span class="n">Polyhedron</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Point_3</span> <span class="n">p</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+    <span class="n">Point_3</span> <span class="n">q</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+    <span class="n">Point_3</span> <span class="n">r</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+    <span class="n">Point_3</span> <span class="n">s</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+
+    <span class="n">Polyhedron</span> <span class="n">P</span><span class="p">;</span>
+    <span class="n">P</span><span class="p">.</span><span class="n">make_tetrahedron</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+    <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">set_ascii_mode</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span><span class="n">P</span><span class="p">.</span><span class="n">points_begin</span><span class="p">(),</span> <span class="n">P</span><span class="p">.</span><span class="n">points_end</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream_iterator</span><span class="o">&lt;</span><span class="n">Point_3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">));</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h3 id="36-example-with-circulator-writing-object-file-format-off">3.6 Example with Circulator Writing Object File Format (OFF)</h3><p>对于环绕面的半边的逆时针循环序列，以及环绕顶点的半边的顺时针循环序列，多面体曲面提供了方便的循环器。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/Simple_cartesian.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polyhedron_3.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Simple_cartesian</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span>               <span class="n">Kernel</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Kernel</span><span class="o">::</span><span class="n">Point_3</span>                              <span class="n">Point_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">Kernel</span><span class="o">&gt;</span>                   <span class="n">Polyhedron</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">Facet_iterator</span>                   <span class="n">Facet_iterator</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">Halfedge_around_facet_circulator</span> <span class="n">Halfedge_facet_circulator</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Point_3</span> <span class="n">p</span><span class="p">(</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+    <span class="n">Point_3</span> <span class="n">q</span><span class="p">(</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+    <span class="n">Point_3</span> <span class="n">r</span><span class="p">(</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+    <span class="n">Point_3</span> <span class="n">s</span><span class="p">(</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+    <span class="n">Polyhedron</span> <span class="n">P</span><span class="p">;</span>
+    <span class="n">P</span><span class="p">.</span><span class="n">make_tetrahedron</span><span class="p">(</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+
+    <span class="c1">// ++++++++++++++++++++write++++++++++++++++++++</span>
+    <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">set_ascii_mode</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"OFF"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">P</span><span class="p">.</span><span class="n">size_of_vertices</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">' '</span> <span class="o">&lt;&lt;</span> <span class="n">P</span><span class="p">.</span><span class="n">size_of_facets</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" 0"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span> <span class="n">P</span><span class="p">.</span><span class="n">points_begin</span><span class="p">(),</span> <span class="n">P</span><span class="p">.</span><span class="n">points_end</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream_iterator</span><span class="o">&lt;</span><span class="n">Point_3</span><span class="o">&gt;</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">));</span>
+    <span class="k">for</span> <span class="p">(</span>  <span class="n">Facet_iterator</span> <span class="n">i</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="n">facets_begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">P</span><span class="p">.</span><span class="n">facets_end</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Halfedge_facet_circulator</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">-&gt;</span><span class="n">facet_begin</span><span class="p">();</span>
+        <span class="c1">// Facets in polyhedral surfaces are at least triangles.</span>
+        <span class="n">CGAL_assertion</span><span class="p">(</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">circulator_size</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">circulator_size</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="sc">' '</span><span class="p">;</span>
+        <span class="k">do</span>
+        <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="sc">' '</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">distance</span><span class="p">(</span><span class="n">P</span><span class="p">.</span><span class="n">vertices_begin</span><span class="p">(),</span> <span class="n">j</span><span class="o">-&gt;</span><span class="n">vertex</span><span class="p">());</span>  <span class="c1">// 非随机访问</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span> <span class="o">++</span><span class="n">j</span> <span class="o">!=</span> <span class="n">i</span><span class="o">-&gt;</span><span class="n">facet_begin</span><span class="p">());</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h3 id="37-example-using-euler-operators-to-build-a-cube">3.7 Example Using Euler Operators to Build a Cube</h3><p>欧拉操作是修改多面体表面的自然方式。我们提供了一组多边形操作：split_face()、join_facet()、split_vertex()、join_vertex()、split_loop() 和 join_loop()。我们添加了进一步方便的函数，例如 split_edge()。然而，它们可以通过以上的六个操作实现。此外，我们提供更多的操作符来处理有边界边的多面体表面，例如创建和删除孔洞。我们参考了参考手册中对于欧拉操作的定义和插图。</p><p>下面的示例实现了将单元立方体附加到多面体表面的函数。为了跟踪创建立方体期间的不同步骤，一系列草图可能有助于为程序代码中出现的不同句柄添加标签。下图展示了从创建过程中选取的六个步骤，这些步骤在程序里被标注。</p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/lazy.github.io/assets/img/posts/2021-08-26/make_cube.png" alt="图2" /> <em>图2</em></p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+</pre><td class="rouge-code"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Poly</span><span class="p">&gt;</span>
+<span class="k">typename</span> <span class="n">Poly</span><span class="o">::</span><span class="n">Halfedge_handle</span> <span class="nf">make_cube_3</span><span class="p">(</span><span class="n">Poly</span><span class="o">&amp;</span> <span class="n">P</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// appends a cube of size [0,1]^3 to the polyhedron P.</span>
+    <span class="n">CGAL_precondition</span><span class="p">(</span> <span class="n">P</span><span class="p">.</span><span class="n">is_valid</span><span class="p">());</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Poly</span><span class="o">::</span><span class="n">Point_3</span>         <span class="n">Point</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Poly</span><span class="o">::</span><span class="n">Halfedge_handle</span> <span class="n">Halfedge_handle</span><span class="p">;</span>
+    <span class="n">Halfedge_handle</span> <span class="n">h</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="n">make_tetrahedron</span><span class="p">(</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                                           <span class="n">Point</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                                           <span class="n">Point</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                                           <span class="n">Point</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+    <span class="n">Halfedge_handle</span> <span class="n">g</span> <span class="o">=</span> <span class="n">h</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">opposite</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">();</span>             <span class="c1">// Fig. (a)</span>
+    <span class="n">P</span><span class="p">.</span><span class="n">split_edge</span><span class="p">(</span> <span class="n">h</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">());</span>
+    <span class="n">P</span><span class="p">.</span><span class="n">split_edge</span><span class="p">(</span> <span class="n">g</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">());</span>
+    <span class="n">P</span><span class="p">.</span><span class="n">split_edge</span><span class="p">(</span> <span class="n">g</span><span class="p">);</span>                                              <span class="c1">// Fig. (b)</span>
+    <span class="n">h</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">vertex</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">point</span><span class="p">()</span>     <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">g</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">vertex</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">point</span><span class="p">()</span>     <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">g</span><span class="o">-&gt;</span><span class="n">opposite</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">vertex</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">point</span><span class="p">()</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>            <span class="c1">// Fig. (c)</span>
+    <span class="n">Halfedge_handle</span> <span class="n">f</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="n">split_facet</span><span class="p">(</span> <span class="n">g</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">(),</span>
+                                      <span class="n">g</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">());</span>  <span class="c1">// Fig. (d)</span>
+    <span class="n">Halfedge_handle</span> <span class="n">e</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="n">split_edge</span><span class="p">(</span> <span class="n">f</span><span class="p">);</span>
+    <span class="n">e</span><span class="o">-&gt;</span><span class="n">vertex</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">point</span><span class="p">()</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>                        <span class="c1">// Fig. (e)</span>
+    <span class="n">P</span><span class="p">.</span><span class="n">split_facet</span><span class="p">(</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">());</span>                          <span class="c1">// Fig. (f)</span>
+    <span class="n">CGAL_postcondition</span><span class="p">(</span> <span class="n">P</span><span class="p">.</span><span class="n">is_valid</span><span class="p">());</span>
+    <span class="k">return</span> <span class="n">h</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Simple_cartesian</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span>     <span class="n">Kernel</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">Kernel</span><span class="o">&gt;</span>         <span class="n">Polyhedron</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">Halfedge_handle</span>        <span class="n">Halfedge_handle</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Polyhedron</span> <span class="n">P</span><span class="p">;</span>
+    <span class="n">Halfedge_handle</span> <span class="n">h</span> <span class="o">=</span> <span class="n">make_cube_3</span><span class="p">(</span><span class="n">P</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">P</span><span class="p">.</span><span class="n">is_tetrahedron</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"R U OK"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h3 id="38-draw-a-polyhedron">3.8 Draw a Polyhedron</h3><p>通过调用 CGAL::draw<POLY>() 函数，多面体可以被可视化。调用该函数将会阻塞，当用户关闭窗口时程序继续运行。</POLY></p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/Exact_predicates_inexact_constructions_kernel.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polyhedron_3.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/IO/Polyhedron_iostream.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/draw_polyhedron.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp">
+</span><span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Exact_predicates_inexact_constructions_kernel</span>  <span class="n">Kernel</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">Kernel</span><span class="o">&gt;</span>                       <span class="n">Polyhedron</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+  <span class="n">Polyhedron</span> <span class="n">P</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">in1</span><span class="p">((</span><span class="n">argc</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span><span class="o">?</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">:</span><span class="s">"data/cross.off"</span><span class="p">);</span>
+  <span class="n">in1</span> <span class="o">&gt;&gt;</span> <span class="n">P</span><span class="p">;</span>
+  <span class="n">CGAL</span><span class="o">::</span><span class="n">draw</span><span class="p">(</span><span class="n">P</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">EXIT_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p>该函数需要 CGAL_Qt5。若 CGAL_USE_BASIC_VIEWER 在编译时定义，则该函数可用。</p><h2 id="4-文件-io">4 文件 I/O</h2><p>文件 I/O 当前只考虑曲面的拓扑和点的坐标。它忽略了可能的平面方程或任何用户添加的属性。</p><p>CGAL 默认支持的文件格式是 OFF，文件扩展名为 .off。修改器 set_pretty_mode() 允许输出结构化注解。否则，输出将没有注解。缺省情况下写操作不带注解。由于 OFF 是默认格式，因此提供了 iostream 操作符。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/IO/Polyhedron_iostream.h&gt;</span><span class="cp">
+</span><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">PolyhedronTraits_3</span><span class="p">&gt;</span>
+<span class="n">ostream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span> <span class="n">ostream</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">,</span> <span class="k">const</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">PolyhedronTraits_3</span><span class="o">&gt;&amp;</span> <span class="n">P</span><span class="p">);</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">PolyhedronTraits_3</span><span class="p">&gt;</span>
+<span class="n">istream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&gt;&gt;</span><span class="p">(</span> <span class="n">istream</span><span class="o">&amp;</span> <span class="n">in</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">PolyhedronTraits_3</span><span class="o">&gt;&amp;</span> <span class="n">P</span><span class="p">);</span>
+</pre></table></code></div></div><p>支持写操作的其他格式有.iv、.wrl 和.obj。方便的输出函数将多面体表面写入有 CGAL 程序生成的 Geomview 过程。这些输出函数作为流操作符提供，现在作用于相应格式的流类型。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/IO/Polyhedron_inventor_ostream.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/IO/Polyhedron_VRML_1_ostream.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/IO/Polyhedron_VRML_2_ostream.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/IO/Polyhedron_geomview_ostream.h&gt;</span><span class="cp">
+</span><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">PolyhedronTraits_3</span><span class="p">&gt;</span>
+<span class="n">Inventor_ostream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span> <span class="n">Inventor_ostream</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">,</span> <span class="k">const</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">PolyhedronTraits_3</span><span class="o">&gt;&amp;</span> <span class="n">P</span><span class="p">);</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">PolyhedronTraits_3</span><span class="p">&gt;</span>
+<span class="n">VRML_1_ostream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span> <span class="n">VRML_1_ostream</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">,</span> <span class="k">const</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">PolyhedronTraits_3</span><span class="o">&gt;&amp;</span> <span class="n">P</span><span class="p">);</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">PolyhedronTraits_3</span><span class="p">&gt;</span>
+<span class="n">VRML_2_ostream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span> <span class="n">VRML_2_ostream</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">,</span> <span class="k">const</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">PolyhedronTraits_3</span><span class="o">&gt;&amp;</span> <span class="n">P</span><span class="p">);</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">PolyhedronTraits_3</span><span class="p">&gt;</span>
+<span class="n">Geomview_stream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span> <span class="n">Geomview_stream</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">,</span> <span class="k">const</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">PolyhedronTraits_3</span><span class="o">&gt;&amp;</span> <span class="n">P</span><span class="p">);</span>
+</pre></table></code></div></div><p>所有这些文件格式都有一个共同点，即它们将曲面表示为一组面。每个面都是指向一组顶点的索引列表。顶点用坐标三元组表示。Polyhedron_3 的文件 I/O 对这些格式施加了某些限制。它们必须表示一个有效的多面体表面，例如一个没有孤立点的二维流型。</p><p>对于有关广义多面体网格 I/O 的更多信息，参见 Polygon Mesh IO。</p><h2 id="5-扩展顶点半边和面">5 扩展顶点、半边和面</h2><p>在3.5节我们知道了，如何将底层半边数据结构的默认列表表示修改为向量表示。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span> <span class="n">Traits</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_items_3</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_default</span><span class="o">&gt;</span> <span class="n">Polyhedron</span><span class="p">;</span>
+</pre></table></code></div></div><p>现在我们想仔细看一下第二个模板参数 Polyhedron_items_3，它指定了使用哪种顶点、半边和面。注意 face 是用于半边数据结构的项，而 facet 仅仅在多面体表面的最顶层作为 face 的别名。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre><td class="rouge-code"><pre><span class="k">class</span> <span class="nc">Polyhedron_items_3</span> <span class="p">{</span>
+    <span class="nl">public:</span>
+    <span class="c1">// 顶点</span>
+    <span class="k">template</span> <span class="o">&lt;</span> <span class="k">class</span> <span class="nc">Refs</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Traits</span><span class="p">&gt;</span>
+    <span class="k">struct</span> <span class="nc">Vertex_wrapper</span> <span class="p">{</span>
+        <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Traits</span><span class="o">::</span><span class="n">Point_3</span> <span class="n">Point</span><span class="p">;</span>
+        <span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_vertex_base</span><span class="o">&lt;</span><span class="n">Refs</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Tag_true</span><span class="p">,</span> <span class="n">Point</span><span class="o">&gt;</span> <span class="n">Vertex</span><span class="p">;</span>
+    <span class="p">};</span>
+    <span class="c1">// 半边</span>
+    <span class="k">template</span> <span class="o">&lt;</span> <span class="k">class</span> <span class="nc">Refs</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Traits</span><span class="p">&gt;</span>
+    <span class="k">struct</span> <span class="nc">Halfedge_wrapper</span> <span class="p">{</span>
+        <span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_halfedge_base</span><span class="o">&lt;</span><span class="n">Refs</span><span class="o">&gt;</span> <span class="n">Halfedge</span><span class="p">;</span>
+    <span class="p">};</span>
+    <span class="c1">// 面</span>
+    <span class="k">template</span> <span class="o">&lt;</span> <span class="k">class</span> <span class="nc">Refs</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Traits</span><span class="p">&gt;</span>
+    <span class="k">struct</span> <span class="nc">Face_wrapper</span> <span class="p">{</span>
+        <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Traits</span><span class="o">::</span><span class="n">Plane_3</span> <span class="n">Plane</span><span class="p">;</span>
+        <span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_face_base</span><span class="o">&lt;</span><span class="n">Refs</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Tag_true</span><span class="p">,</span> <span class="n">Plane</span><span class="o">&gt;</span> <span class="n">Face</span><span class="p">;</span>
+    <span class="p">};</span>
+<span class="p">};</span>
+</pre></table></code></div></div><p>默认多面体使用了所有受支持的关联，顶点类中的点，以及面类中的平面方程。注意包装器类如何提供两个模板参数：Refs（稍后讨论）和 Traits（多面体曲面使用的几何特征类，这里为我们提供了点和平面方程的类型）。</p><p>使用示例代码，我们可以写出自己的 Item。相反，如果只想交换一个类，我们介绍一个更简单的方法。我们使用更简单的面，它有颜色属性而没有平面方程。为了简化顶点、半边和面的类的创建，推荐从给定基类派生。即使基类不包含任何数据，它也会提供方便的类型定义。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre><td class="rouge-code"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Refs</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">My_face</span> <span class="o">:</span> <span class="k">public</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_face_base</span><span class="o">&lt;</span><span class="n">Refs</span><span class="o">&gt;</span> 
+<span class="p">{</span>
+    <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">Color</span> <span class="n">color</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></table></code></div></div><p>新的 Item 从旧的 Item 派生而来，并且包装器包含重载的面类型定义。注意包装器的名字和模板参数是固定的。如本例所示，即使不使用模板参数，也不能改变。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre><span class="k">struct</span> <span class="nc">My_items</span> <span class="o">:</span> <span class="k">public</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_items_3</span> 
+<span class="p">{</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Refs</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Traits</span><span class="p">&gt;</span>
+    <span class="k">struct</span> <span class="nc">Face_wrapper</span> <span class="p">{</span>
+    <span class="k">typedef</span> <span class="n">My_face</span><span class="o">&lt;</span><span class="n">Refs</span><span class="o">&gt;</span> <span class="n">Face</span><span class="p">;</span>
+    <span class="p">};</span>
+<span class="p">};</span>
+</pre></table></code></div></div><p>把所有部分放在一起。完整的示例程序说明了一旦定义了颜色属性，访问它是多么容易。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/Simple_cartesian.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/IO/Color.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polyhedron_3.h&gt;</span><span class="cp">
+</span><span class="c1">// A face type with a color member variable.</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Refs</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">My_face</span> <span class="o">:</span> <span class="k">public</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_face_base</span><span class="o">&lt;</span><span class="n">Refs</span><span class="o">&gt;</span> 
+<span class="p">{</span>
+    <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">Color</span> <span class="n">color</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="c1">// An items type using my face.</span>
+<span class="k">struct</span> <span class="nc">My_items</span> <span class="o">:</span> <span class="k">public</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_items_3</span> 
+<span class="p">{</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Refs</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Traits</span><span class="p">&gt;</span>
+    <span class="k">struct</span> <span class="nc">Face_wrapper</span> <span class="p">{</span>
+        <span class="k">typedef</span> <span class="n">My_face</span><span class="o">&lt;</span><span class="n">Refs</span><span class="o">&gt;</span> <span class="n">Face</span><span class="p">;</span>
+    <span class="p">};</span>
+<span class="p">};</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Simple_cartesian</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span>        <span class="n">Kernel</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">Kernel</span><span class="p">,</span> <span class="n">My_items</span><span class="o">&gt;</span>  <span class="n">Polyhedron</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">Halfedge_handle</span>           <span class="n">Halfedge_handle</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Polyhedron</span> <span class="n">P</span><span class="p">;</span>
+    <span class="n">Halfedge_handle</span> <span class="n">h</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="n">make_tetrahedron</span><span class="p">();</span>
+    <span class="n">h</span><span class="o">-&gt;</span><span class="n">facet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">color</span> <span class="o">=</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">red</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><p>现在我们回到包装器类的第一个模板参数 Refs。该参数为我们提供局部类型，使我们能够在顶点、半边和面之间进行进一步引用。这些局部类型是 Polyhedron_3::Vertex_handle、Polyhedron_3::Halfedge_handle 和 Polyhedron_3::Facet_handle，以及对应的 .._const_handle。现在，我们向面添加新的顶点引用。为了更全面的设计，可以添加封装和访问函数，但简单起见我们在这里省略。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Refs</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">My_face</span> <span class="o">:</span> <span class="k">public</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_face_base</span><span class="o">&lt;</span><span class="n">Refs</span><span class="o">&gt;</span> 
+<span class="p">{</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Refs</span><span class="o">::</span><span class="n">Vertex_handle</span> <span class="n">Vertex_handle</span><span class="p">;</span>
+    <span class="n">Vertex_handle</span> <span class="n">vertex_ref</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></table></code></div></div><p>更多高级示例可以在 halfedge data structures 找到，其进一步说明了半边数据结构的设计。</p><h2 id="6-高级示例程序">6 高级示例程序</h2><h3 id="61-创建细分曲面">6.1 创建细分曲面</h3><p>程序从标准输入读取一个多面体表面，并将一个精细的多面体表面写入标准输出。输入和输出的格式为 OFF，文件扩展名为.off。</p><p>细化是使用$\sqrt{3}$-机制创建细分曲面的一个步骤。</p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/lazy.github.io/assets/img/posts/2021-08-26/subdiv_small.png" alt="图3" /> <em>图3</em></p><p>该示例程序只能处理闭合曲面，但扩展示例 polyhedron_prog_subdiv_with_boundary.cpp 可以处理有边界的曲面。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/Simple_cartesian.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polyhedron_3.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp">
+</span><span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Simple_cartesian</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span>                       <span class="n">Kernel</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Kernel</span><span class="o">::</span><span class="n">Vector_3</span>                                     <span class="n">Vector</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Kernel</span><span class="o">::</span><span class="n">Point_3</span>                                      <span class="n">Point</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">Kernel</span><span class="o">&gt;</span>                           <span class="n">Polyhedron</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">Vertex</span>                                   <span class="n">Vertex</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">Vertex_iterator</span>                          <span class="n">Vertex_iterator</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">Halfedge_handle</span>                          <span class="n">Halfedge_handle</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">Edge_iterator</span>                            <span class="n">Edge_iterator</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">Facet_iterator</span>                           <span class="n">Facet_iterator</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">Halfedge_around_vertex_const_circulator</span>  <span class="n">HV_circulator</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">Halfedge_around_facet_circulator</span>         <span class="n">HF_circulator</span><span class="p">;</span>
+<span class="kt">void</span> <span class="nf">create_center_vertex</span><span class="p">(</span> <span class="n">Polyhedron</span><span class="o">&amp;</span> <span class="n">P</span><span class="p">,</span> <span class="n">Facet_iterator</span> <span class="n">f</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Vector</span> <span class="n">vec</span><span class="p">(</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">order</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">HF_circulator</span> <span class="n">h</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">facet_begin</span><span class="p">();</span>
+    <span class="k">do</span> <span class="p">{</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="n">vec</span> <span class="o">+</span> <span class="p">(</span> <span class="n">h</span><span class="o">-&gt;</span><span class="n">vertex</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">point</span><span class="p">()</span> <span class="o">-</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">ORIGIN</span><span class="p">);</span>  <span class="c1">// Point -&gt; Vector</span>
+        <span class="o">++</span> <span class="n">order</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span> <span class="o">++</span><span class="n">h</span> <span class="o">!=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">facet_begin</span><span class="p">());</span>
+    <span class="n">CGAL_assertion</span><span class="p">(</span> <span class="n">order</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">);</span>  <span class="c1">// guaranteed by definition of polyhedron</span>
+    <span class="n">Point</span> <span class="n">center</span> <span class="o">=</span>  <span class="n">CGAL</span><span class="o">::</span><span class="n">ORIGIN</span> <span class="o">+</span> <span class="p">(</span><span class="n">vec</span> <span class="o">/</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">order</span><span class="p">));</span>
+    <span class="n">Halfedge_handle</span> <span class="n">new_center</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="n">create_center_vertex</span><span class="p">(</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">halfedge</span><span class="p">());</span>  <span class="c1">// 为面创建中心点</span>
+    <span class="n">new_center</span><span class="o">-&gt;</span><span class="n">vertex</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">point</span><span class="p">()</span> <span class="o">=</span> <span class="n">center</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">struct</span> <span class="nc">Smooth_old_vertex</span>
+<span class="p">{</span>
+    <span class="n">Point</span> <span class="k">operator</span><span class="p">()(</span> <span class="k">const</span> <span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="n">CGAL_precondition</span><span class="p">((</span><span class="n">CGAL</span><span class="o">::</span><span class="n">circulator_size</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">vertex_begin</span><span class="p">())</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">degree</span> <span class="o">=</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">circulator_size</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">vertex_begin</span><span class="p">())</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span> <span class="mf">4.0</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">std</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">CGAL_PI</span> <span class="o">/</span> <span class="n">degree</span><span class="p">))</span> <span class="o">/</span> <span class="mf">9.0</span><span class="p">;</span>
+        <span class="n">Vector</span> <span class="n">vec</span> <span class="o">=</span> <span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">point</span><span class="p">()</span> <span class="o">-</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">ORIGIN</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">);</span>  <span class="c1">// 新顶点坐标</span>
+        <span class="n">HV_circulator</span> <span class="n">h</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">vertex_begin</span><span class="p">();</span>  <span class="c1">// 环绕顶点 v 的半边循环器，第一条半边指向顶点 v</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="n">vec</span> <span class="o">=</span> <span class="n">vec</span> <span class="o">+</span> <span class="p">(</span> <span class="n">h</span><span class="o">-&gt;</span><span class="n">opposite</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">vertex</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">point</span><span class="p">()</span> <span class="o">-</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">ORIGIN</span><span class="p">)</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">/</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">degree</span><span class="p">);</span>
+            <span class="o">++</span> <span class="n">h</span><span class="p">;</span>
+            <span class="n">CGAL_assertion</span><span class="p">(</span> <span class="n">h</span> <span class="o">!=</span> <span class="n">v</span><span class="p">.</span><span class="n">vertex_begin</span><span class="p">());</span> <span class="c1">// even degree guaranteed</span>
+            <span class="o">++</span> <span class="n">h</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span> <span class="n">h</span> <span class="o">!=</span> <span class="n">v</span><span class="p">.</span><span class="n">vertex_begin</span><span class="p">());</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">CGAL</span><span class="o">::</span><span class="n">ORIGIN</span> <span class="o">+</span> <span class="n">vec</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="kt">void</span> <span class="nf">flip_edge</span><span class="p">(</span> <span class="n">Polyhedron</span><span class="o">&amp;</span> <span class="n">P</span><span class="p">,</span> <span class="n">Halfedge_handle</span> <span class="n">e</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Halfedge_handle</span> <span class="n">h</span> <span class="o">=</span> <span class="n">e</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">();</span>
+    <span class="n">P</span><span class="p">.</span><span class="n">join_facet</span><span class="p">(</span> <span class="n">e</span><span class="p">);</span>
+    <span class="n">P</span><span class="p">.</span><span class="n">split_facet</span><span class="p">(</span> <span class="n">h</span><span class="p">,</span> <span class="n">h</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">subdiv</span><span class="p">(</span> <span class="n">Polyhedron</span><span class="o">&amp;</span> <span class="n">P</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">P</span><span class="p">.</span><span class="n">size_of_facets</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="c1">// We use that new vertices/halfedges/facets are appended at the end.</span>
+    <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">nv</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="n">size_of_vertices</span><span class="p">();</span>
+    <span class="n">Vertex_iterator</span> <span class="n">last_v</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="n">vertices_end</span><span class="p">();</span>
+    <span class="o">--</span> <span class="n">last_v</span><span class="p">;</span>  <span class="c1">// the last of the old vertices  用于遍历点</span>
+    <span class="n">Edge_iterator</span> <span class="n">last_e</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="n">edges_end</span><span class="p">();</span>
+    <span class="o">--</span> <span class="n">last_e</span><span class="p">;</span>  <span class="c1">// the last of the old edges  用于遍历边</span>
+    <span class="n">Facet_iterator</span> <span class="n">last_f</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="n">facets_end</span><span class="p">();</span>
+    <span class="o">--</span> <span class="n">last_f</span><span class="p">;</span>  <span class="c1">// the last of the old facets  用于遍历面</span>
+    <span class="n">Facet_iterator</span> <span class="n">f</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="n">facets_begin</span><span class="p">();</span>    <span class="c1">// create new center vertices</span>
+    <span class="k">do</span> <span class="p">{</span>
+        <span class="n">create_center_vertex</span><span class="p">(</span> <span class="n">P</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span> <span class="n">f</span><span class="o">++</span> <span class="o">!=</span> <span class="n">last_f</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span> <span class="n">pts</span><span class="p">;</span>  <span class="c1">// 用于存储处理后的旧顶点</span>
+    <span class="n">pts</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span> <span class="n">nv</span><span class="p">);</span>  <span class="c1">// get intermediate space for the new points</span>
+    <span class="o">++</span> <span class="n">last_v</span><span class="p">;</span>  <span class="c1">// make it the past-the-end position again</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">transform</span><span class="p">(</span> <span class="n">P</span><span class="p">.</span><span class="n">vertices_begin</span><span class="p">(),</span> <span class="n">last_v</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">back_inserter</span><span class="p">(</span> <span class="n">pts</span><span class="p">),</span> <span class="n">Smooth_old_vertex</span><span class="p">());</span>  <span class="c1">// 处理旧顶点</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span> <span class="n">pts</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">pts</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">P</span><span class="p">.</span><span class="n">points_begin</span><span class="p">());</span>  <span class="c1">// 用处理后的旧顶点覆盖旧顶点</span>
+    <span class="n">Edge_iterator</span> <span class="n">e</span> <span class="o">=</span> <span class="n">P</span><span class="p">.</span><span class="n">edges_begin</span><span class="p">();</span>              <span class="c1">// flip the old edges</span>
+    <span class="o">++</span> <span class="n">last_e</span><span class="p">;</span>  <span class="c1">// make it the past-the-end position again</span>
+    <span class="k">while</span> <span class="p">(</span> <span class="n">e</span> <span class="o">!=</span> <span class="n">last_e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Halfedge_handle</span> <span class="n">h</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>
+        <span class="o">++</span><span class="n">e</span><span class="p">;</span>  <span class="c1">// careful, incr. before flip since flip destroys current edge</span>
+        <span class="n">flip_edge</span><span class="p">(</span> <span class="n">P</span><span class="p">,</span> <span class="n">h</span><span class="p">);</span>
+    <span class="p">};</span>
+    <span class="n">CGAL_postcondition</span><span class="p">(</span> <span class="n">P</span><span class="p">.</span><span class="n">is_valid</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="n">Polyhedron</span> <span class="n">P</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">in1</span><span class="p">((</span><span class="n">argc</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span><span class="o">?</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">:</span><span class="s">"./data/cube.off"</span><span class="p">);</span>
+    <span class="n">in1</span> <span class="o">&gt;&gt;</span> <span class="n">P</span><span class="p">;</span>
+    <span class="n">P</span><span class="p">.</span><span class="n">normalize_border</span><span class="p">();</span>  <span class="c1">// 排序半边，使得非边界在边界之前</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">P</span><span class="p">.</span><span class="n">size_of_border_edges</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"The input object has border edges. Cannot subdivide."</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">subdiv</span><span class="p">(</span> <span class="n">P</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"R U OK"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setprecision</span><span class="p">(</span><span class="mi">17</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">P</span><span class="p">;</span>  <span class="c1">// 设置浮点精度</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><blockquote><p>reserve(n)：分配内存空间，不会减少已被元素占用的内存空间。 std::transform()：在指定的范围内应用于给定操作，并将结果存储在另一个范围内。 std::copy()：拷贝，注意分配足够内存空间。 std::setprecision()：设置浮点精度。</p></blockquote><h3 id="62-使用增量生成器和修改器机制">6.2 使用增量生成器和修改器机制</h3><p>实用程序类 Polyhedron_incremental_builder_3 可以从点列表和面列表创建多面体曲面。这对于实现通用格式读取器非常有用。这里用来生成一个三角形。</p><p>修改器机制允许以受控的方式访问多面体曲面的内部表示。修改器本质上是使用函数对象的回调机制。在成员函数 Polyhedron_3::delegate() 的最后，有效性检查（默认情况下不会调用）以一种昂贵的后置条件实现。</p><p>在这个例子中，Build_triangle 是从 Modifier_base<HalfedgeDS> 派生的函数对象。多面体的成员函数 Polyhedron_3::delegate() 接收该函数对象，并且调用它的 Modifier_base::operator()()。因此，Build_triangle 的成员函数能够在半边数据结构中创建三角形。</HalfedgeDS></p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/Simple_cartesian.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polyhedron_incremental_builder_3.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/Polyhedron_3.h&gt;</span><span class="cp">
+</span><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">HDS</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">Build_triangle</span> <span class="o">:</span> <span class="k">public</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Modifier_base</span><span class="o">&lt;</span><span class="n">HDS</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">Build_triangle</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="kt">void</span> <span class="nf">operator</span><span class="p">()(</span> <span class="n">HDS</span><span class="o">&amp;</span> <span class="n">hds</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Postcondition: hds is a valid polyhedral surface.</span>
+        <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_incremental_builder_3</span><span class="o">&lt;</span><span class="n">HDS</span><span class="o">&gt;</span> <span class="n">B</span><span class="p">(</span> <span class="n">hds</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+        <span class="n">B</span><span class="p">.</span><span class="n">begin_surface</span><span class="p">(</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">);</span>  <span class="c1">// V F E</span>
+        <span class="k">typedef</span> <span class="k">typename</span> <span class="n">HDS</span><span class="o">::</span><span class="n">Vertex</span>   <span class="n">Vertex</span><span class="p">;</span>
+        <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Vertex</span><span class="o">::</span><span class="n">Point</span> <span class="n">Point</span><span class="p">;</span>
+        <span class="n">B</span><span class="p">.</span><span class="n">add_vertex</span><span class="p">(</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+        <span class="n">B</span><span class="p">.</span><span class="n">add_vertex</span><span class="p">(</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+        <span class="n">B</span><span class="p">.</span><span class="n">add_vertex</span><span class="p">(</span> <span class="n">Point</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+        <span class="n">B</span><span class="p">.</span><span class="n">begin_facet</span><span class="p">();</span>
+        <span class="n">B</span><span class="p">.</span><span class="n">add_vertex_to_facet</span><span class="p">(</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="n">B</span><span class="p">.</span><span class="n">add_vertex_to_facet</span><span class="p">(</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="n">B</span><span class="p">.</span><span class="n">add_vertex_to_facet</span><span class="p">(</span> <span class="mi">2</span><span class="p">);</span>
+        <span class="n">B</span><span class="p">.</span><span class="n">end_facet</span><span class="p">();</span>
+        <span class="n">B</span><span class="p">.</span><span class="n">end_surface</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Simple_cartesian</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span>     <span class="n">Kernel</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Polyhedron_3</span><span class="o">&lt;</span><span class="n">Kernel</span><span class="o">&gt;</span>         <span class="n">Polyhedron</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">HalfedgeDS</span>             <span class="n">HalfedgeDS</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Polyhedron</span> <span class="n">P</span><span class="p">;</span>
+    <span class="n">Build_triangle</span><span class="o">&lt;</span><span class="n">HalfedgeDS</span><span class="o">&gt;</span> <span class="n">triangle</span><span class="p">;</span>
+    <span class="n">P</span><span class="p">.</span><span class="n">delegate</span><span class="p">(</span> <span class="n">triangle</span><span class="p">);</span>
+    <span class="n">CGAL_assertion</span><span class="p">(</span> <span class="n">P</span><span class="p">.</span><span class="n">is_triangle</span><span class="p">(</span> <span class="n">P</span><span class="p">.</span><span class="n">halfedges_begin</span><span class="p">()));</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/lazy.github.io/categories/cg/'>CG</a>, <a href='/lazy.github.io/categories/geometry/'>GEOMETRY</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/lazy.github.io/tags/cgal/" class="post-tag no-text-decoration" >cgal</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> by the author.</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=CGAL 5.3 三维多面体表面 - lazy&url=https://flyingpika.github.io/lazy.github.io/posts/3d-polyhedral-surface/" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=CGAL 5.3 三维多面体表面 - lazy&u=https://flyingpika.github.io/lazy.github.io/posts/3d-polyhedral-surface/" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://telegram.me/share?text=CGAL 5.3 三维多面体表面 - lazy&url=https://flyingpika.github.io/lazy.github.io/posts/3d-polyhedral-surface/" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i class="fa-fw fas fa-link small" onclick="copyLink()" data-toggle="tooltip" data-placement="top" title="Copy link"></i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted topbar-down"><div class="access"><div id="access-lastmod" class="post"> <span>Recent Update</span><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/lazy.github.io/posts/unity-shortcut-key/">Unity 2020.3.22f1 快捷键</a><li><a href="/lazy.github.io/posts/surface-mesh/">CGAL 5.3 表面网格</a><li><a href="/lazy.github.io/posts/3d-polyhedral-surface/">CGAL 5.3 三维多面体表面</a><li><a href="/lazy.github.io/posts/snow/">A Material Point Method for Snow Simulation</a><li><a href="/lazy.github.io/posts/mixed-integer-quadrangulation/">Mixed-Integer Quadrangulation</a></ul></div><div id="access-tags"> <span>Trending Tags</span><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/lazy.github.io/tags/cgal/">cgal</a> <a class="post-tag" href="/lazy.github.io/tags/taichi/">taichi</a> <a class="post-tag" href="/lazy.github.io/tags/paper/">paper</a> <a class="post-tag" href="/lazy.github.io/tags/blender/">blender</a> <a class="post-tag" href="/lazy.github.io/tags/imgui/">imgui</a> <a class="post-tag" href="/lazy.github.io/tags/moment-of-inertia/">moment of inertia</a> <a class="post-tag" href="/lazy.github.io/tags/unity/">unity</a> <a class="post-tag" href="/lazy.github.io/tags/%E5%8D%9A%E5%AE%A2/">博客</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"> <span class="pl-3 pt-2 mb-2">Contents</span><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="post-extend-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/lazy.github.io/posts/surface-mesh/"><div class="card-body"> <span class="timeago small" > Aug 26, 2021 <i class="unloaded">2021-08-26T00:02:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>CGAL 5.3 表面网格</h3><div class="text-muted small"><p> https://doc.cgal.org/latest/Surface_mesh/index.html#Chapter_3D_Surface_mesh 类 Surface_mesh 是一个半边数据结构的实现，用于表示多面体表面。它是包 Halfedge Data Structures 和包 3D Polyhedral Surface 的替代。主要区别在于它基于索引而不是指针。此外，向顶点、...</p></div></div></a></div><div class="card"> <a href="/lazy.github.io/posts/p-m-p/"><div class="card-body"> <span class="timeago small" > Sep 5, 2022 <i class="unloaded">2022-09-05T00:00:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>CGAL 5.5 多边形网格处理</h3><div class="text-muted small"><p> https://doc.cgal.org/latest/Polygon_mesh_processing/index.html#title58 1 介绍 该包实现了一系列用于多边形网格处理的方法和类，从基础操作到复杂几何处理算法。该包的实现主要遵循 Botsch 等人的著作 Polygon Mesh Processing。 1.1 多边形网格 多边形网格是一致、有向的表面网格，包含一个...</p></div></div></a></div><div class="card"> <a href="/lazy.github.io/posts/halfedge-data-structures/"><div class="card-body"> <span class="timeago small" > Aug 26, 2021 <i class="unloaded">2021-08-26T00:00:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>CGAL 5.3 半边数据结构</h3><div class="text-muted small"><p> https://doc.cgal.org/latest/HalfedgeDS/index.html#Chapter_Halfedge_Data_Structures 1 介绍 半边数据结构是以边为中心的数据结构，能够维护顶点、边和面的关联信息。每个边被分解为两个相反方向的半边。每个半边存储一个关联面和关联顶点。对于每个面和每个顶点，存储一个关联半边。半边数据结构的简化变体可能省略一些信息...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/lazy.github.io/posts/halfedge-data-structures/" class="btn btn-outline-primary" prompt="Older"><p>CGAL 5.3 半边数据结构</p></a> <a href="/lazy.github.io/posts/surface-mesh/" class="btn btn-outline-primary" prompt="Newer"><p>CGAL 5.3 表面网格</p></a></div></div></div></div><footer class="d-flex w-100 justify-content-center"><div class="d-flex justify-content-between align-items-center"><div class="footer-left"><p class="mb-0"> © 2023 <a href="https://github.com/flyingPika">lazy</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><h4 class="text-muted mb-4">Trending Tags</h4><a class="post-tag" href="/lazy.github.io/tags/cgal/">cgal</a> <a class="post-tag" href="/lazy.github.io/tags/taichi/">taichi</a> <a class="post-tag" href="/lazy.github.io/tags/paper/">paper</a> <a class="post-tag" href="/lazy.github.io/tags/blender/">blender</a> <a class="post-tag" href="/lazy.github.io/tags/imgui/">imgui</a> <a class="post-tag" href="/lazy.github.io/tags/moment-of-inertia/">moment of inertia</a> <a class="post-tag" href="/lazy.github.io/tags/unity/">unity</a> <a class="post-tag" href="/lazy.github.io/tags/%E5%8D%9A%E5%AE%A2/">博客</a></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.7.3/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/lazy.github.io/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="https://flyingPika.github.io{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script>

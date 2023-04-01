@@ -1,0 +1,409 @@
+<!DOCTYPE html><html lang="zh-CN" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Jekyll v4.3.2" /><meta property="og:title" content="CGAL 5.3 半边数据结构" /><meta property="og:locale" content="zh_CN" /><meta name="description" content="https://doc.cgal.org/latest/HalfedgeDS/index.html#Chapter_Halfedge_Data_Structures" /><meta property="og:description" content="https://doc.cgal.org/latest/HalfedgeDS/index.html#Chapter_Halfedge_Data_Structures" /><link rel="canonical" href="https://flyingpika.github.io/lazy.github.io/posts/halfedge-data-structures/" /><meta property="og:url" content="https://flyingpika.github.io/lazy.github.io/posts/halfedge-data-structures/" /><meta property="og:site_name" content="lazy" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2021-08-26T00:00:00+08:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="CGAL 5.3 半边数据结构" /><meta name="twitter:site" content="@twitter_username" /><meta name="google-site-verification" content="google_meta_tag_verification" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2021-09-20T20:31:47+08:00","datePublished":"2021-08-26T00:00:00+08:00","description":"https://doc.cgal.org/latest/HalfedgeDS/index.html#Chapter_Halfedge_Data_Structures","headline":"CGAL 5.3 半边数据结构","mainEntityOfPage":{"@type":"WebPage","@id":"https://flyingpika.github.io/lazy.github.io/posts/halfedge-data-structures/"},"url":"https://flyingpika.github.io/lazy.github.io/posts/halfedge-data-structures/"}</script><title>CGAL 5.3 半边数据结构 | lazy</title><link rel="apple-touch-icon" sizes="180x180" href="/lazy.github.io/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/lazy.github.io/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/lazy.github.io/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/lazy.github.io/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/lazy.github.io/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="lazy"><meta name="application-name" content="lazy"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/lazy.github.io/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/lazy.github.io/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script> <script defer src="https://cdn.jsdelivr.net/combine/npm/popper.js@1.15.0,npm/bootstrap@4/dist/js/bootstrap.min.js"></script> <script async src="https://cdn.jsdelivr.net/combine/npm/lozad/dist/lozad.min.js,npm/magnific-popup@1/dist/jquery.magnific-popup.min.js"></script> <script defer src="/lazy.github.io/assets/js/dist/post.min.js"></script> <script defer src="/lazy.github.io/app.js"></script> <script defer src="https://www.googletagmanager.com/gtag/js?id="></script> <script> document.addEventListener("DOMContentLoaded", function(event) { window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', ''); }); </script><body data-spy="scroll" data-target="#toc"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/lazy.github.io/" alt="avatar" class="mx-auto"> <img src="/lazy.github.io/assets/img/avatar/avatar.jpeg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/lazy.github.io/">lazy</a></div><div class="site-subtitle font-italic">Welcome home, ashen one. Speak thine heart's desire.</div></div><ul class="w-100"><li class="nav-item"> <a href="/lazy.github.io/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/lazy.github.io/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/lazy.github.io/tags/" class="nav-link"> <i class="fa-fw fas fa-tags ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/lazy.github.io/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/lazy.github.io/about/" class="nav-link"> <i class="fa-fw fas fa-info ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center"> <a href="https://github.com/flyingPika" aria-label="github" class="order-3" target="_blank" rel="noopener"> <i class="fab fa-github-alt"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['814833529','qq.com'].join('@')" aria-label="email" class="order-4" > <i class="fas fa-envelope"></i> </a> <a href="https://www.imdb.com/user/ur88183274/ratings?ref_=nv_usr_rt_4" aria-label="imdb" class="order-5" target="_blank" rel="noopener"> <i class="fab fa-imdb"></i> </a> <a href="/lazy.github.io/feed.xml" aria-label="rss" class="order-6" > <i class="fas fa-rss"></i> </a> <span class="icon-border order-2"></span> <span id="mode-toggle-wrapper" class="order-1"> <i class="mode-toggle fas fa-adjust"></i> <script type="text/javascript"> class ModeToggle { static get MODE_KEY() { return "mode"; } static get DARK_MODE() { return "dark"; } static get LIGHT_MODE() { return "light"; } constructor() { if (this.hasMode) { if (this.isDarkMode) { if (!this.isSysDarkPrefer) { this.setDark(); } } else { if (this.isSysDarkPrefer) { this.setLight(); } } } var self = this; /* always follow the system prefers */ this.sysDarkPrefers.addListener(function() { if (self.hasMode) { if (self.isDarkMode) { if (!self.isSysDarkPrefer) { self.setDark(); } } else { if (self.isSysDarkPrefer) { self.setLight(); } } self.clearMode(); } self.updateMermaid(); }); } /* constructor() */ setDark() { $('html').attr(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); } setLight() { $('html').attr(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); } clearMode() { $('html').removeAttr(ModeToggle.MODE_KEY); sessionStorage.removeItem(ModeToggle.MODE_KEY); } get sysDarkPrefers() { return window.matchMedia("(prefers-color-scheme: dark)"); } get isSysDarkPrefer() { return this.sysDarkPrefers.matches; } get isDarkMode() { return this.mode == ModeToggle.DARK_MODE; } get isLightMode() { return this.mode == ModeToggle.LIGHT_MODE; } get hasMode() { return this.mode != null; } get mode() { return sessionStorage.getItem(ModeToggle.MODE_KEY); } /* get the current mode on screen */ get modeStatus() { if (this.isDarkMode || (!this.hasMode && this.isSysDarkPrefer) ) { return ModeToggle.DARK_MODE; } else { return ModeToggle.LIGHT_MODE; } } updateMermaid() { if (typeof mermaid !== "undefined") { let expectedTheme = (this.modeStatus === ModeToggle.DARK_MODE? "dark" : "default"); let config = { theme: expectedTheme }; /* re-render the SVG › <https://github.com/mermaid-js/mermaid/issues/311#issuecomment-332557344> */ $(".mermaid").each(function() { let svgCode = $(this).prev().children().html(); $(this).removeAttr("data-processed"); $(this).html(svgCode); }); mermaid.initialize(config); mermaid.init(undefined, ".mermaid"); } } flipMode() { if (this.hasMode) { if (this.isSysDarkPrefer) { if (this.isLightMode) { this.clearMode(); } else { this.setLight(); } } else { if (this.isDarkMode) { this.clearMode(); } else { this.setDark(); } } } else { if (this.isSysDarkPrefer) { this.setLight(); } else { this.setDark(); } } this.updateMermaid(); } /* flipMode() */ } /* ModeToggle */ let toggle = new ModeToggle(); $(".mode-toggle").click(function() { toggle.flipMode(); }); </script> </span></div></div><div id="topbar-wrapper" class="row justify-content-center topbar-down"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/lazy.github.io/"> Posts </a> </span> <span>CGAL 5.3 半边数据结构</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> <i class="fa fa-times-circle fa-fw" id="search-cleaner"></i> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="post-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>CGAL 5.3 半边数据结构</h1><div class="post-meta text-muted d-flex flex-column"><div> <span class="semi-bold"> lazy </span> <span class="timeago " data-toggle="tooltip" data-placement="bottom" title="Thu, Aug 26, 2021, 12:00 AM +0800" prep="on" > Aug 26, 2021 <i class="unloaded">2021-08-26T00:00:00+08:00</i> </span></div><div> <span> <span class="timeago lastmod" data-toggle="tooltip" data-placement="bottom" title="Mon, Sep 20, 2021, 8:31 PM +0800" prefix="Updated " > Sep 20, 2021 <i class="unloaded">2021-09-20T20:31:47+08:00</i> </span> </span> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="2581 words">14 min</span></div></div><div class="post-content"><p><a href="https://doc.cgal.org/latest/HalfedgeDS/index.html#Chapter_Halfedge_Data_Structures">https://doc.cgal.org/latest/HalfedgeDS/index.html#Chapter_Halfedge_Data_Structures</a></p><h2 id="1-介绍">1 介绍</h2><p>半边数据结构是以边为中心的数据结构，能够维护顶点、边和面的关联信息。每个边被分解为两个相反方向的半边。每个半边存储一个关联面和关联顶点。对于每个面和每个顶点，存储一个关联半边。半边数据结构的简化变体可能省略一些信息。</p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/lazy.github.io/assets/img/posts/2021-08-26/halfedge_small.png" alt="图1" /> <em>图1</em></p><p>半边数据结构是一种组合数据结构，几何解释由构建在半边数据结构之上的类添加。这些类可能比直接使用半边数据结构更方便，因为半边数据结构意味着作为一个实现层。参见多面体表面一章中的 Polyhedron_3 类。</p><h2 id="2-软件设计">2 软件设计</h2><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/lazy.github.io/assets/img/posts/2021-08-26/hds_design_col.png" alt="图2" /> <em>图2</em></p><p>上图说明了软件设计的三层职责，以 Polyhedron_3 作为顶层的例子。Item 提供信息实际存储的空间。半边需要提供下一个半边和相反半边的引用，对于前一个半边、关联顶点和关联面的引用是可选的。顶点和面可以为空，可选择提供关联半边的索引。HalfedgeDataStructure 和 Polyhedron 支持前面提到的选项。此外，Item 类可以使用任意属性和成员函数进行扩展，这将通过继承提升为用于 Polyhedron 的实际的类。</p><p>顶点、半边和面以 Item 类局部类型的形式传递给 HalfedgeDataStructure 和 Polyhedron。顶点、半边和面的实现满足需求的强制性部分。它们可以被用户用作扩展的基类。更丰富的实现作为默认实现被提供，对于 Polyhedron，它们提供所有可选的关联、顶点类型的三维点和面类型的平面方程。</p><p>概念 HalfedgeDS 负责 Item 的组织存储，目前提供了双向链表和 vector 的实现。HalfedgeDS 定义了属于 Item 的句柄和迭代器，这些类型被提升为 Item 本身的声明，并且被用于提供关联 Item 的引用。类型提升通过 Item 的模板参数 Refs 完成。HalfedgeDataStructure 提供成员函数来插入删除 Item、遍历所有 Item 并且提供对 Item 的访问。</p><p>概念 HalfedgeDS 有两种不同模型：HalfedgeDS_list 和 HalfedgeDS_vector。我们保证接口简单，并且分解共同功能到单独的助手类：HalfedgeDS_decorator、HalfedgeDS_const_decorator 和 HalfedgeDS_items_decorator。这些助手类包含有助于实现下一层（例如 Polyhedron）操作的操作。此外，助手类包含自适应功能。例如，如果半边不提供 HalfedgeDSHalfedge::prev() 成员函数，助手类的 HalfedgeDS_items_decorator::find_prev() 成员函数会沿面的正向搜索前一半边。但如果提供 HalfedgeDSHalfedge::prev() 成员函数，HalfedgeDS_items_decorator::find_prev() 将简单地调用它。这种区别在编译时通过编译时标签的技术解决。</p><p>Polyhedron_3 类作为第三层示例添加了几何解释，提供了易于使用的高级功能接口，并且统一了对底层灵活性的访问。它将 face 重命名为 facet。接口旨在保护内部表示的完整性，存储在 Item 中的句柄不再由用户直接编写。Polyhedron 添加了方便有效的循环器，用于访问围绕顶点或面的边的循环序列。为了实现这一点，Polyhedron_3 得到 Item 提供的顶点、半边和面。这些新的 Item 实际在 HalfedgeDS 中使用，这给了我们在设计中连贯的类型结构，特别是与之前的设计相比。</p><h2 id="3-示例程序">3 示例程序</h2><h3 id="31-the-default-halfedge-data-structure">3.1 The Default Halfedge Data Structure</h3><p>下面的例子使用了默认的 HalfedgeDS 和 Decorator。默认的 HalfedgeDS 使用基于列表的表示。Item 的所有关联和一种顶点的点类型被定义。简单的 Traits 类提供用于点的类型。程序创建一个由两个半边、一个顶点和两个面组成的环，并检查其有效性。</p><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="/lazy.github.io/assets/img/posts/2021-08-26/loop.png" alt="图3" /> <em>图3</em></p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_default.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_decorator.h&gt;</span><span class="cp">
+</span><span class="k">struct</span> <span class="nc">Traits</span> <span class="p">{</span> <span class="k">typedef</span> <span class="kt">int</span> <span class="n">Point_2</span><span class="p">;</span> <span class="p">};</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_default</span><span class="o">&lt;</span><span class="n">Traits</span><span class="o">&gt;</span> <span class="n">HDS</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_decorator</span><span class="o">&lt;</span><span class="n">HDS</span><span class="o">&gt;</span> <span class="n">Decorator</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">HDS</span> <span class="n">hds</span><span class="p">;</span>
+    <span class="n">Decorator</span> <span class="n">decorator</span><span class="p">(</span><span class="n">hds</span><span class="p">);</span>
+    <span class="n">decorator</span><span class="p">.</span><span class="n">create_loop</span><span class="p">();</span>
+    <span class="n">CGAL_assertion</span><span class="p">(</span> <span class="n">decorator</span><span class="p">.</span><span class="n">is_valid</span><span class="p">());</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h3 id="32-a-minimal-halfedge-data-structure">3.2 A Minimal Halfedge Data Structure</h3><p>下面的例子使用了 HalfedgeDS_min_items 和默认的 HalfedgeDS。结果是一个数据结构，其只维护包含 next 和 opposite 指针的半边，不存储顶点和面。这种数据结构表示无向图。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_min_items.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_default.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_decorator.h&gt;</span><span class="cp">
+</span><span class="c1">// no traits needed, argument can be arbitrary dummy.</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_default</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_min_items</span><span class="o">&gt;</span> <span class="n">HDS</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_decorator</span><span class="o">&lt;</span><span class="n">HDS</span><span class="o">&gt;</span>  <span class="n">Decorator</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">HDS</span> <span class="n">hds</span><span class="p">;</span>
+    <span class="n">Decorator</span> <span class="n">decorator</span><span class="p">(</span><span class="n">hds</span><span class="p">);</span>
+    <span class="n">decorator</span><span class="p">.</span><span class="n">create_loop</span><span class="p">();</span>
+    <span class="n">CGAL_assertion</span><span class="p">(</span> <span class="n">decorator</span><span class="p">.</span><span class="n">is_valid</span><span class="p">());</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h3 id="33-the-default-with-a-vector-instead-of-a-list">3.3 The Default with a Vector Instead of a List</h3><p>默认 HalfedgeDS 使用链表和最大基类。这里我们将列表改为 vector 表示。同样，简单的 Traits 类提供用于点的类型。注意，对于 vector 存储，HalfedgeDS 的大小应该预先保留，可以使用示例中的构造函数，也可以使用成员函数 reserve()。以后可以改变 HalfedgeDS 的大小通过进一步调用成员函数 reserve()，但前提是 HalfedgeDS 处于一致（即有效）状态。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_items_2.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_vector.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_decorator.h&gt;</span><span class="cp">
+</span><span class="k">struct</span> <span class="nc">Traits</span> <span class="p">{</span> <span class="k">typedef</span> <span class="kt">int</span> <span class="n">Point_2</span><span class="p">;</span> <span class="p">};</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_vector</span><span class="o">&lt;</span> <span class="n">Traits</span><span class="p">,</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_items_2</span><span class="o">&gt;</span> <span class="n">HDS</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_decorator</span><span class="o">&lt;</span><span class="n">HDS</span><span class="o">&gt;</span>  <span class="n">Decorator</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">HDS</span> <span class="n">hds</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+    <span class="n">Decorator</span> <span class="n">decorator</span><span class="p">(</span><span class="n">hds</span><span class="p">);</span>
+    <span class="n">decorator</span><span class="p">.</span><span class="n">create_loop</span><span class="p">();</span>
+    <span class="n">CGAL_assertion</span><span class="p">(</span> <span class="n">decorator</span><span class="p">.</span><span class="n">is_valid</span><span class="p">());</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h3 id="34-example-adding-color-to-faces">3.4 Example Adding Color to Faces</h3><p>这个例子重用了可用于面的基类，并且添加了成员变量 color。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_items_2.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_default.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/IO/Color.h&gt;</span><span class="cp">
+</span><span class="c1">// A face type with a color member variable.</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Refs</span><span class="p">&gt;</span>
+<span class="k">struct</span> <span class="nc">My_face</span> <span class="o">:</span> <span class="k">public</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_face_base</span><span class="o">&lt;</span><span class="n">Refs</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">Color</span> <span class="n">color</span><span class="p">;</span>
+    <span class="n">My_face</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="n">My_face</span><span class="p">(</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">Color</span> <span class="n">c</span><span class="p">)</span> <span class="o">:</span> <span class="n">color</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="p">{}</span>
+<span class="p">};</span>
+<span class="c1">// An items type using my face.</span>
+<span class="k">struct</span> <span class="nc">My_items</span> <span class="o">:</span> <span class="k">public</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_items_2</span> <span class="p">{</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Refs</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Traits</span><span class="p">&gt;</span>
+    <span class="k">struct</span> <span class="nc">Face_wrapper</span> <span class="p">{</span>
+        <span class="k">typedef</span> <span class="n">My_face</span><span class="o">&lt;</span><span class="n">Refs</span><span class="o">&gt;</span> <span class="n">Face</span><span class="p">;</span>
+    <span class="p">};</span>
+<span class="p">};</span>
+<span class="k">struct</span> <span class="nc">My_traits</span> <span class="p">{</span> <span class="c1">// arbitrary point type, not used here.</span>
+    <span class="k">typedef</span> <span class="kt">int</span>  <span class="n">Point_2</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_default</span><span class="o">&lt;</span><span class="n">My_traits</span><span class="p">,</span> <span class="n">My_items</span><span class="o">&gt;</span> <span class="n">HDS</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">HDS</span><span class="o">::</span><span class="n">Face</span>                                     <span class="n">Face</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">HDS</span><span class="o">::</span><span class="n">Face_handle</span>                              <span class="n">Face_handle</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">HDS</span> <span class="n">hds</span><span class="p">;</span>
+    <span class="n">Face_handle</span> <span class="n">f</span> <span class="o">=</span> <span class="n">hds</span><span class="p">.</span><span class="n">faces_push_back</span><span class="p">(</span> <span class="n">Face</span><span class="p">(</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">red</span><span class="p">()));</span>
+    <span class="n">f</span><span class="o">-&gt;</span><span class="n">color</span> <span class="o">=</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">blue</span><span class="p">();</span>
+    <span class="n">CGAL_assertion</span><span class="p">(</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">color</span> <span class="o">==</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">IO</span><span class="o">::</span><span class="n">blue</span><span class="p">());</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h3 id="35-example-defining-a-more-compact-halfedge">3.5 Example Defining a More Compact Halfedge</h3><p>这里展示的 HalfedgeDS 空间效率稍低，例如翼边数据结构、DCEL 或四边数据结构的变体。另一方面，它在遍历期间不需要任何搜索操作。</p><p>下面的例子使用传统 C 技术将遍历时间交换为紧凑的存储表示。思想如下：HalfedgeDS 两两分配半边。关于基于 vector 的数据结构，这意味着在 C 指针算法中，半边和其相对半边的差的绝对值总为1。我们可以使用一个编码差符号的位代替 opposite 指针。我们将这个位作为最低有效位存储在下一个半边句柄中。此外，我们我们不实现前一个半边的指针。剩下的是每个半边三个指针。</p><p>我们使用静态成员函数 HalfedgeDS::halfedge_handle() 从指针转换到半边句柄。相同的解决方案可以用于基于链表的 HalfedgeDS。这里是基于 vector 的 HalfedgeDS 的例子。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_items_2.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_vector.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_decorator.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cstddef&gt;</span><span class="cp">
+</span><span class="c1">// Define a new halfedge class. We assume that the Halfedge_handle can</span>
+<span class="c1">// be created from a pointer (e.g. the HalfedgeDS is based here on the</span>
+<span class="c1">// In_place_list or a std::vector with such property) and that halfedges</span>
+<span class="c1">// are allocated in pairs. We encode the opposite pointer in a single bit,</span>
+<span class="c1">// which is stored in the lower bit of the next-pointer. We use the</span>
+<span class="c1">// static member function HDS::halfedge_handle to translate pointer to</span>
+<span class="c1">// handles.</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Refs</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">My_halfedge</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">typedef</span> <span class="n">Refs</span>                                 <span class="n">HDS</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">My_halfedge</span><span class="o">&lt;</span><span class="n">Refs</span><span class="o">&gt;</span>                    <span class="n">Base_base</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">My_halfedge</span><span class="o">&lt;</span><span class="n">Refs</span><span class="o">&gt;</span>                    <span class="n">Base</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">My_halfedge</span><span class="o">&lt;</span><span class="n">Refs</span><span class="o">&gt;</span>                    <span class="n">Self</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Tag_false</span>                      <span class="n">Supports_halfedge_prev</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Tag_true</span>                       <span class="n">Supports_halfedge_vertex</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Tag_true</span>                       <span class="n">Supports_halfedge_face</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Refs</span><span class="o">::</span><span class="n">Vertex_handle</span>         <span class="n">Vertex_handle</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Refs</span><span class="o">::</span><span class="n">Vertex_const_handle</span>   <span class="n">Vertex_const_handle</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Refs</span><span class="o">::</span><span class="n">Halfedge</span>              <span class="n">Halfedge</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Refs</span><span class="o">::</span><span class="n">Halfedge_handle</span>       <span class="n">Halfedge_handle</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Refs</span><span class="o">::</span><span class="n">Halfedge_const_handle</span> <span class="n">Halfedge_const_handle</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Refs</span><span class="o">::</span><span class="n">Face_handle</span>           <span class="n">Face_handle</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">Refs</span><span class="o">::</span><span class="n">Face_const_handle</span>     <span class="n">Face_const_handle</span><span class="p">;</span>
+<span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="kt">ptrdiff_t</span>  <span class="n">nxt</span><span class="p">;</span>
+<span class="nl">public:</span>
+    <span class="n">My_halfedge</span><span class="p">()</span> <span class="o">:</span> <span class="n">nxt</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">f</span><span class="p">(</span> <span class="n">Face_handle</span><span class="p">())</span> <span class="p">{}</span>
+    <span class="n">Halfedge_handle</span> <span class="nf">opposite</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// Halfedge could be different from My_halfedge (e.g. pointer for</span>
+        <span class="c1">// linked list). Get proper handle from 'this' pointer first, do</span>
+        <span class="c1">// pointer arithmetic, then convert pointer back to handle again.</span>
+        <span class="n">Halfedge_handle</span> <span class="n">h</span> <span class="o">=</span> <span class="n">HDS</span><span class="o">::</span><span class="n">halfedge_handle</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="c1">// proper handle</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="n">nxt</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">HDS</span><span class="o">::</span><span class="n">halfedge_handle</span><span class="p">(</span> <span class="o">&amp;*</span> <span class="n">h</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">HDS</span><span class="o">::</span><span class="n">halfedge_handle</span><span class="p">(</span> <span class="o">&amp;*</span> <span class="n">h</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">Halfedge_const_handle</span> <span class="nf">opposite</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="c1">// same as above</span>
+        <span class="n">Halfedge_const_handle</span> <span class="n">h</span> <span class="o">=</span> <span class="n">HDS</span><span class="o">::</span><span class="n">halfedge_handle</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="c1">// proper handle</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="n">nxt</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">HDS</span><span class="o">::</span><span class="n">halfedge_handle</span><span class="p">(</span> <span class="o">&amp;*</span> <span class="n">h</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">HDS</span><span class="o">::</span><span class="n">halfedge_handle</span><span class="p">(</span> <span class="o">&amp;*</span> <span class="n">h</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">Halfedge_handle</span> <span class="nf">next</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">HDS</span><span class="o">::</span><span class="n">halfedge_handle</span><span class="p">((</span><span class="n">Halfedge</span><span class="o">*</span><span class="p">)(</span><span class="n">nxt</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span> <span class="n">std</span><span class="o">::</span><span class="kt">ptrdiff_t</span><span class="p">(</span><span class="mi">1</span><span class="p">))));</span>
+    <span class="p">}</span>
+    <span class="n">Halfedge_const_handle</span> <span class="nf">next</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">HDS</span><span class="o">::</span><span class="n">halfedge_handle</span><span class="p">((</span><span class="k">const</span> <span class="n">Halfedge</span><span class="o">*</span><span class="p">)</span>
+                                    <span class="p">(</span><span class="n">nxt</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span> <span class="n">std</span><span class="o">::</span><span class="kt">ptrdiff_t</span><span class="p">(</span><span class="mi">1</span><span class="p">))));</span>
+    <span class="p">}</span>
+    <span class="kt">void</span>  <span class="nf">set_opposite</span><span class="p">(</span> <span class="n">Halfedge_handle</span> <span class="n">h</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">CGAL_precondition</span><span class="p">((</span> <span class="o">&amp;*</span> <span class="n">h</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">==</span> <span class="o">&amp;*</span> <span class="n">HDS</span><span class="o">::</span><span class="n">halfedge_handle</span><span class="p">(</span><span class="k">this</span><span class="p">))</span> <span class="o">||</span>
+                          <span class="p">(</span> <span class="o">&amp;*</span> <span class="n">h</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="o">&amp;*</span> <span class="n">HDS</span><span class="o">::</span><span class="n">halfedge_handle</span><span class="p">(</span><span class="k">this</span><span class="p">)));</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="o">&amp;*</span> <span class="n">h</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">==</span> <span class="o">&amp;*</span> <span class="n">HDS</span><span class="o">::</span><span class="n">halfedge_handle</span><span class="p">(</span><span class="k">this</span><span class="p">))</span>
+            <span class="n">nxt</span> <span class="o">|=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">else</span>
+            <span class="n">nxt</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="o">~</span> <span class="n">std</span><span class="o">::</span><span class="kt">ptrdiff_t</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="kt">void</span>  <span class="nf">set_next</span><span class="p">(</span> <span class="n">Halfedge_handle</span> <span class="n">h</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">CGAL_precondition</span><span class="p">(</span> <span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="kt">ptrdiff_t</span><span class="p">)(</span><span class="o">&amp;*</span><span class="n">h</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="n">nxt</span> <span class="o">=</span> <span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="kt">ptrdiff_t</span><span class="p">)(</span><span class="o">&amp;*</span><span class="n">h</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="n">nxt</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>    <span class="c1">// Support for the Vertex_handle.</span>
+    <span class="n">Vertex_handle</span>    <span class="n">v</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">// the incident vertex.</span>
+    <span class="n">Vertex_handle</span>         <span class="nf">vertex</span><span class="p">()</span>                     <span class="p">{</span> <span class="k">return</span> <span class="n">v</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">Vertex_const_handle</span>   <span class="n">vertex</span><span class="p">()</span> <span class="k">const</span>               <span class="p">{</span> <span class="k">return</span> <span class="n">v</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span>                  <span class="nf">set_vertex</span><span class="p">(</span> <span class="n">Vertex_handle</span> <span class="n">w</span><span class="p">)</span> <span class="p">{</span> <span class="n">v</span> <span class="o">=</span> <span class="n">w</span><span class="p">;</span> <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">Face_handle</span>      <span class="n">f</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">Face_handle</span>           <span class="nf">face</span><span class="p">()</span>                       <span class="p">{</span> <span class="k">return</span> <span class="n">f</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">Face_const_handle</span>     <span class="n">face</span><span class="p">()</span> <span class="k">const</span>                 <span class="p">{</span> <span class="k">return</span> <span class="n">f</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span>                  <span class="nf">set_face</span><span class="p">(</span> <span class="n">Face_handle</span> <span class="n">g</span><span class="p">)</span>     <span class="p">{</span> <span class="n">f</span> <span class="o">=</span> <span class="n">g</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">bool</span>                  <span class="nf">is_border</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">f</span> <span class="o">==</span> <span class="n">Face_handle</span><span class="p">();</span> <span class="p">}</span>
+<span class="p">};</span>
+<span class="c1">// Replace halfedge in the default items type.</span>
+<span class="k">struct</span> <span class="nc">My_items</span> <span class="o">:</span> <span class="k">public</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_items_2</span> <span class="p">{</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Refs</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Traits</span><span class="p">&gt;</span>
+    <span class="k">struct</span> <span class="nc">Halfedge_wrapper</span> <span class="p">{</span>
+        <span class="k">typedef</span> <span class="n">My_halfedge</span><span class="o">&lt;</span><span class="n">Refs</span><span class="o">&gt;</span> <span class="n">Halfedge</span><span class="p">;</span>
+    <span class="p">};</span>
+<span class="p">};</span>
+<span class="k">struct</span> <span class="nc">Traits</span> <span class="p">{</span> <span class="k">typedef</span> <span class="kt">int</span> <span class="n">Point_2</span><span class="p">;</span> <span class="p">};</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_vector</span><span class="o">&lt;</span><span class="n">Traits</span><span class="p">,</span> <span class="n">My_items</span><span class="o">&gt;</span> <span class="n">HDS</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_decorator</span><span class="o">&lt;</span><span class="n">HDS</span><span class="o">&gt;</span>  <span class="n">Decorator</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">HDS</span> <span class="n">hds</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+    <span class="n">Decorator</span> <span class="n">decorator</span><span class="p">(</span><span class="n">hds</span><span class="p">);</span>
+    <span class="n">decorator</span><span class="p">.</span><span class="n">create_loop</span><span class="p">();</span>
+    <span class="n">CGAL_assertion</span><span class="p">(</span> <span class="n">decorator</span><span class="p">.</span><span class="n">is_valid</span><span class="p">());</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h3 id="36-example-using-the-halfedge-iterator">3.6 Example Using the Halfedge Iterator</h3><p>在默认的 HalfedgeDS 中创建了两条边。使用半边迭代器计数半边。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_default.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_decorator.h&gt;</span><span class="cp">
+</span><span class="k">struct</span> <span class="nc">Traits</span> <span class="p">{</span> <span class="k">typedef</span> <span class="kt">int</span> <span class="n">Point_2</span><span class="p">;</span> <span class="p">};</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_default</span><span class="o">&lt;</span><span class="n">Traits</span><span class="o">&gt;</span> <span class="n">HDS</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_decorator</span><span class="o">&lt;</span><span class="n">HDS</span><span class="o">&gt;</span>  <span class="n">Decorator</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">HDS</span><span class="o">::</span><span class="n">Halfedge_iterator</span>           <span class="n">Iterator</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">HDS</span> <span class="n">hds</span><span class="p">;</span>
+    <span class="n">Decorator</span> <span class="n">decorator</span><span class="p">(</span><span class="n">hds</span><span class="p">);</span>
+    <span class="n">decorator</span><span class="p">.</span><span class="n">create_loop</span><span class="p">();</span>
+    <span class="n">decorator</span><span class="p">.</span><span class="n">create_segment</span><span class="p">();</span>
+    <span class="n">CGAL_assertion</span><span class="p">(</span> <span class="n">decorator</span><span class="p">.</span><span class="n">is_valid</span><span class="p">());</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span> <span class="n">Iterator</span> <span class="n">i</span> <span class="o">=</span> <span class="n">hds</span><span class="p">.</span><span class="n">halfedges_begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">hds</span><span class="p">.</span><span class="n">halfedges_end</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span> <span class="p">)</span>
+        <span class="o">++</span><span class="n">n</span><span class="p">;</span>
+    <span class="n">CGAL_assertion</span><span class="p">(</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">4</span><span class="p">);</span>  <span class="c1">// == 2 edges</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h3 id="37-example-for-an-adapter-to-build-an-edge-iterator">3.7 Example for an Adapter to Build an Edge Iterator</h3><p>在默认的 HalfedgeDS 中创建了两条边。适配器 N_step_adaptor 用于声明计数边的边迭代器。</p><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_default.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/HalfedgeDS_decorator.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;CGAL/N_step_adaptor.h&gt;</span><span class="cp">
+</span><span class="k">struct</span> <span class="nc">Traits</span> <span class="p">{</span> <span class="k">typedef</span> <span class="kt">int</span> <span class="n">Point_2</span><span class="p">;</span> <span class="p">};</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_default</span><span class="o">&lt;</span><span class="n">Traits</span><span class="o">&gt;</span>            <span class="n">HDS</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">HalfedgeDS_decorator</span><span class="o">&lt;</span><span class="n">HDS</span><span class="o">&gt;</span>             <span class="n">Decorator</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">HDS</span><span class="o">::</span><span class="n">Halfedge_iterator</span>                      <span class="n">Halfedge_iterator</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">N_step_adaptor</span><span class="o">&lt;</span> <span class="n">Halfedge_iterator</span><span class="p">,</span> <span class="mi">2</span><span class="o">&gt;</span> <span class="n">Iterator</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">HDS</span> <span class="n">hds</span><span class="p">;</span>
+    <span class="n">Decorator</span> <span class="n">decorator</span><span class="p">(</span><span class="n">hds</span><span class="p">);</span>
+    <span class="n">decorator</span><span class="p">.</span><span class="n">create_loop</span><span class="p">();</span>
+    <span class="n">decorator</span><span class="p">.</span><span class="n">create_segment</span><span class="p">();</span>
+    <span class="n">CGAL_assertion</span><span class="p">(</span> <span class="n">decorator</span><span class="p">.</span><span class="n">is_valid</span><span class="p">());</span>
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span> <span class="n">Iterator</span> <span class="n">e</span> <span class="o">=</span> <span class="n">hds</span><span class="p">.</span><span class="n">halfedges_begin</span><span class="p">();</span> <span class="n">e</span> <span class="o">!=</span> <span class="n">hds</span><span class="p">.</span><span class="n">halfedges_end</span><span class="p">();</span> <span class="o">++</span><span class="n">e</span><span class="p">)</span>
+        <span class="o">++</span><span class="n">n</span><span class="p">;</span>
+    <span class="n">CGAL_assertion</span><span class="p">(</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span><span class="p">);</span>  <span class="c1">// == 2 edges</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/lazy.github.io/categories/cg/'>CG</a>, <a href='/lazy.github.io/categories/geometry/'>GEOMETRY</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/lazy.github.io/tags/cgal/" class="post-tag no-text-decoration" >cgal</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> by the author.</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=CGAL 5.3 半边数据结构 - lazy&url=https://flyingpika.github.io/lazy.github.io/posts/halfedge-data-structures/" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=CGAL 5.3 半边数据结构 - lazy&u=https://flyingpika.github.io/lazy.github.io/posts/halfedge-data-structures/" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://telegram.me/share?text=CGAL 5.3 半边数据结构 - lazy&url=https://flyingpika.github.io/lazy.github.io/posts/halfedge-data-structures/" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i class="fa-fw fas fa-link small" onclick="copyLink()" data-toggle="tooltip" data-placement="top" title="Copy link"></i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted topbar-down"><div class="access"><div id="access-lastmod" class="post"> <span>Recent Update</span><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/lazy.github.io/posts/unity-shortcut-key/">Unity 2020.3.22f1 快捷键</a><li><a href="/lazy.github.io/posts/surface-mesh/">CGAL 5.3 表面网格</a><li><a href="/lazy.github.io/posts/3d-polyhedral-surface/">CGAL 5.3 三维多面体表面</a><li><a href="/lazy.github.io/posts/snow/">A Material Point Method for Snow Simulation</a><li><a href="/lazy.github.io/posts/mixed-integer-quadrangulation/">Mixed-Integer Quadrangulation</a></ul></div><div id="access-tags"> <span>Trending Tags</span><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/lazy.github.io/tags/cgal/">cgal</a> <a class="post-tag" href="/lazy.github.io/tags/taichi/">taichi</a> <a class="post-tag" href="/lazy.github.io/tags/paper/">paper</a> <a class="post-tag" href="/lazy.github.io/tags/blender/">blender</a> <a class="post-tag" href="/lazy.github.io/tags/imgui/">imgui</a> <a class="post-tag" href="/lazy.github.io/tags/moment-of-inertia/">moment of inertia</a> <a class="post-tag" href="/lazy.github.io/tags/unity/">unity</a> <a class="post-tag" href="/lazy.github.io/tags/%E5%8D%9A%E5%AE%A2/">博客</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"> <span class="pl-3 pt-2 mb-2">Contents</span><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="post-extend-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/lazy.github.io/posts/surface-mesh/"><div class="card-body"> <span class="timeago small" > Aug 26, 2021 <i class="unloaded">2021-08-26T00:02:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>CGAL 5.3 表面网格</h3><div class="text-muted small"><p> https://doc.cgal.org/latest/Surface_mesh/index.html#Chapter_3D_Surface_mesh 类 Surface_mesh 是一个半边数据结构的实现，用于表示多面体表面。它是包 Halfedge Data Structures 和包 3D Polyhedral Surface 的替代。主要区别在于它基于索引而不是指针。此外，向顶点、...</p></div></div></a></div><div class="card"> <a href="/lazy.github.io/posts/p-m-p/"><div class="card-body"> <span class="timeago small" > Sep 5, 2022 <i class="unloaded">2022-09-05T00:00:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>CGAL 5.5 多边形网格处理</h3><div class="text-muted small"><p> https://doc.cgal.org/latest/Polygon_mesh_processing/index.html#title58 1 介绍 该包实现了一系列用于多边形网格处理的方法和类，从基础操作到复杂几何处理算法。该包的实现主要遵循 Botsch 等人的著作 Polygon Mesh Processing。 1.1 多边形网格 多边形网格是一致、有向的表面网格，包含一个...</p></div></div></a></div><div class="card"> <a href="/lazy.github.io/posts/3d-polyhedral-surface/"><div class="card-body"> <span class="timeago small" > Aug 26, 2021 <i class="unloaded">2021-08-26T00:01:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>CGAL 5.3 三维多面体表面</h3><div class="text-muted small"><p> https://doc.cgal.org/latest/Polyhedron/index.html#Chapter_3D_Polyhedral_Surfaces 1 介绍 三维多面体表面由顶点、边、面和它们之间的邻接关系组成。下面的组织是半边数据结构，其限制可表示的表面类别为可定向二维流形（有边界和无边界）。如果表面是闭合的，我们称之为多面体。 多面体表面被视为容器类，它管理顶点、半边...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/lazy.github.io/posts/hello-imgui/" class="btn btn-outline-primary" prompt="Older"><p>HELLO IMGUI</p></a> <a href="/lazy.github.io/posts/3d-polyhedral-surface/" class="btn btn-outline-primary" prompt="Newer"><p>CGAL 5.3 三维多面体表面</p></a></div></div></div></div><footer class="d-flex w-100 justify-content-center"><div class="d-flex justify-content-between align-items-center"><div class="footer-left"><p class="mb-0"> © 2023 <a href="https://github.com/flyingPika">lazy</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><h4 class="text-muted mb-4">Trending Tags</h4><a class="post-tag" href="/lazy.github.io/tags/cgal/">cgal</a> <a class="post-tag" href="/lazy.github.io/tags/taichi/">taichi</a> <a class="post-tag" href="/lazy.github.io/tags/paper/">paper</a> <a class="post-tag" href="/lazy.github.io/tags/blender/">blender</a> <a class="post-tag" href="/lazy.github.io/tags/imgui/">imgui</a> <a class="post-tag" href="/lazy.github.io/tags/moment-of-inertia/">moment of inertia</a> <a class="post-tag" href="/lazy.github.io/tags/unity/">unity</a> <a class="post-tag" href="/lazy.github.io/tags/%E5%8D%9A%E5%AE%A2/">博客</a></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.7.3/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/lazy.github.io/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="https://flyingPika.github.io{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script>

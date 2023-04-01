@@ -1,0 +1,403 @@
+<!DOCTYPE html><html lang="zh-CN" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Jekyll v4.3.2" /><meta property="og:title" content="Taichi 0.7.22 高级编程" /><meta property="og:locale" content="zh_CN" /><meta name="description" content="Metaprogramming" /><meta property="og:description" content="Metaprogramming" /><link rel="canonical" href="https://flyingpika.github.io/lazy.github.io/posts/advanced-programming/" /><meta property="og:url" content="https://flyingpika.github.io/lazy.github.io/posts/advanced-programming/" /><meta property="og:site_name" content="lazy" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2021-07-24T03:00:00+08:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="Taichi 0.7.22 高级编程" /><meta name="twitter:site" content="@twitter_username" /><meta name="google-site-verification" content="google_meta_tag_verification" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2021-08-26T17:47:48+08:00","datePublished":"2021-07-24T03:00:00+08:00","description":"Metaprogramming","headline":"Taichi 0.7.22 高级编程","mainEntityOfPage":{"@type":"WebPage","@id":"https://flyingpika.github.io/lazy.github.io/posts/advanced-programming/"},"url":"https://flyingpika.github.io/lazy.github.io/posts/advanced-programming/"}</script><title>Taichi 0.7.22 高级编程 | lazy</title><link rel="apple-touch-icon" sizes="180x180" href="/lazy.github.io/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/lazy.github.io/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/lazy.github.io/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/lazy.github.io/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/lazy.github.io/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="lazy"><meta name="application-name" content="lazy"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/lazy.github.io/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/lazy.github.io/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script> <script defer src="https://cdn.jsdelivr.net/combine/npm/popper.js@1.15.0,npm/bootstrap@4/dist/js/bootstrap.min.js"></script> <script async src="https://cdn.jsdelivr.net/combine/npm/lozad/dist/lozad.min.js,npm/magnific-popup@1/dist/jquery.magnific-popup.min.js"></script> <script defer src="/lazy.github.io/assets/js/dist/post.min.js"></script> <script defer src="/lazy.github.io/app.js"></script> <script defer src="https://www.googletagmanager.com/gtag/js?id="></script> <script> document.addEventListener("DOMContentLoaded", function(event) { window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', ''); }); </script><body data-spy="scroll" data-target="#toc"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/lazy.github.io/" alt="avatar" class="mx-auto"> <img src="/lazy.github.io/assets/img/avatar/avatar.jpeg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/lazy.github.io/">lazy</a></div><div class="site-subtitle font-italic">Welcome home, ashen one. Speak thine heart's desire.</div></div><ul class="w-100"><li class="nav-item"> <a href="/lazy.github.io/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/lazy.github.io/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/lazy.github.io/tags/" class="nav-link"> <i class="fa-fw fas fa-tags ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/lazy.github.io/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/lazy.github.io/about/" class="nav-link"> <i class="fa-fw fas fa-info ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center"> <a href="https://github.com/flyingPika" aria-label="github" class="order-3" target="_blank" rel="noopener"> <i class="fab fa-github-alt"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['814833529','qq.com'].join('@')" aria-label="email" class="order-4" > <i class="fas fa-envelope"></i> </a> <a href="https://www.imdb.com/user/ur88183274/ratings?ref_=nv_usr_rt_4" aria-label="imdb" class="order-5" target="_blank" rel="noopener"> <i class="fab fa-imdb"></i> </a> <a href="/lazy.github.io/feed.xml" aria-label="rss" class="order-6" > <i class="fas fa-rss"></i> </a> <span class="icon-border order-2"></span> <span id="mode-toggle-wrapper" class="order-1"> <i class="mode-toggle fas fa-adjust"></i> <script type="text/javascript"> class ModeToggle { static get MODE_KEY() { return "mode"; } static get DARK_MODE() { return "dark"; } static get LIGHT_MODE() { return "light"; } constructor() { if (this.hasMode) { if (this.isDarkMode) { if (!this.isSysDarkPrefer) { this.setDark(); } } else { if (this.isSysDarkPrefer) { this.setLight(); } } } var self = this; /* always follow the system prefers */ this.sysDarkPrefers.addListener(function() { if (self.hasMode) { if (self.isDarkMode) { if (!self.isSysDarkPrefer) { self.setDark(); } } else { if (self.isSysDarkPrefer) { self.setLight(); } } self.clearMode(); } self.updateMermaid(); }); } /* constructor() */ setDark() { $('html').attr(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); } setLight() { $('html').attr(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); } clearMode() { $('html').removeAttr(ModeToggle.MODE_KEY); sessionStorage.removeItem(ModeToggle.MODE_KEY); } get sysDarkPrefers() { return window.matchMedia("(prefers-color-scheme: dark)"); } get isSysDarkPrefer() { return this.sysDarkPrefers.matches; } get isDarkMode() { return this.mode == ModeToggle.DARK_MODE; } get isLightMode() { return this.mode == ModeToggle.LIGHT_MODE; } get hasMode() { return this.mode != null; } get mode() { return sessionStorage.getItem(ModeToggle.MODE_KEY); } /* get the current mode on screen */ get modeStatus() { if (this.isDarkMode || (!this.hasMode && this.isSysDarkPrefer) ) { return ModeToggle.DARK_MODE; } else { return ModeToggle.LIGHT_MODE; } } updateMermaid() { if (typeof mermaid !== "undefined") { let expectedTheme = (this.modeStatus === ModeToggle.DARK_MODE? "dark" : "default"); let config = { theme: expectedTheme }; /* re-render the SVG › <https://github.com/mermaid-js/mermaid/issues/311#issuecomment-332557344> */ $(".mermaid").each(function() { let svgCode = $(this).prev().children().html(); $(this).removeAttr("data-processed"); $(this).html(svgCode); }); mermaid.initialize(config); mermaid.init(undefined, ".mermaid"); } } flipMode() { if (this.hasMode) { if (this.isSysDarkPrefer) { if (this.isLightMode) { this.clearMode(); } else { this.setLight(); } } else { if (this.isDarkMode) { this.clearMode(); } else { this.setDark(); } } } else { if (this.isSysDarkPrefer) { this.setLight(); } else { this.setDark(); } } this.updateMermaid(); } /* flipMode() */ } /* ModeToggle */ let toggle = new ModeToggle(); $(".mode-toggle").click(function() { toggle.flipMode(); }); </script> </span></div></div><div id="topbar-wrapper" class="row justify-content-center topbar-down"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/lazy.github.io/"> Posts </a> </span> <span>Taichi 0.7.22 高级编程</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> <i class="fa fa-times-circle fa-fw" id="search-cleaner"></i> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="post-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>Taichi 0.7.22 高级编程</h1><div class="post-meta text-muted d-flex flex-column"><div> <span class="semi-bold"> lazy </span> <span class="timeago " data-toggle="tooltip" data-placement="bottom" title="Sat, Jul 24, 2021, 3:00 AM +0800" prep="on" > Jul 24, 2021 <i class="unloaded">2021-07-24T03:00:00+08:00</i> </span></div><div> <span> <span class="timeago lastmod" data-toggle="tooltip" data-placement="bottom" title="Thu, Aug 26, 2021, 5:47 PM +0800" prefix="Updated " > Aug 26, 2021 <i class="unloaded">2021-08-26T17:47:48+08:00</i> </span> </span> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="1948 words">10 min</span></div></div><div class="post-content"><h2 id="metaprogramming">Metaprogramming</h2><p>太极提供元编程基础设施，元编程可以统一维度依赖的代码开发、提高运行时的性能、简化太极标准库的开发。太极内核被延迟实例化，大量计算发生在编译时。每一个太极内核都是模板内核，即使没有模板参数。</p><h3 id="模板元编程">模板元编程</h3><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre><td class="rouge-code"><pre><span class="nd">@ti.kernel</span>
+<span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ti</span><span class="p">.</span><span class="nf">template</span><span class="p">(),</span> <span class="n">y</span><span class="p">:</span> <span class="n">ti</span><span class="p">.</span><span class="nf">template</span><span class="p">()):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
+        <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="nf">copy</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="nf">copy</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+</pre></table></code></div></div><h3 id="使用分组索引的维度无关编程">使用分组索引的维度无关编程</h3><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre><td class="rouge-code"><pre><span class="nd">@ti.kernel</span>
+<span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ti</span><span class="p">.</span><span class="nf">template</span><span class="p">(),</span> <span class="n">y</span><span class="p">:</span> <span class="n">ti</span><span class="p">.</span><span class="nf">template</span><span class="p">()):</span>
+    <span class="k">for</span> <span class="n">I</span> <span class="ow">in</span> <span class="n">ti</span><span class="p">.</span><span class="nf">grouped</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+        <span class="c1"># I is a vector with same dimensionality with x and data type i32
+</span>        <span class="c1"># If y is 0D, then I = ti.Vector([]), which is equivalent to `None` when used in x[I]
+</span>        <span class="c1"># If y is 1D, then I = ti.Vector([i])
+</span>        <span class="c1"># If y is 2D, then I = ti.Vector([i, j])
+</span>        <span class="c1"># If y is 3D, then I = ti.Vector([i, j, k])
+</span>        <span class="c1"># ...
+</span>        <span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">I</span><span class="p">]</span>
+
+<span class="nd">@ti.kernel</span>
+<span class="k">def</span> <span class="nf">array_op</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ti</span><span class="p">.</span><span class="nf">template</span><span class="p">(),</span> <span class="n">y</span><span class="p">:</span> <span class="n">ti</span><span class="p">.</span><span class="nf">template</span><span class="p">()):</span>
+    <span class="c1"># if field x is 2D:
+</span>    <span class="k">for</span> <span class="n">I</span> <span class="ow">in</span> <span class="n">ti</span><span class="p">.</span><span class="nf">grouped</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+        <span class="n">y</span><span class="p">[</span><span class="n">I</span> <span class="o">+</span> <span class="n">ti</span><span class="p">.</span><span class="nc">Vector</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])]</span> <span class="o">=</span> <span class="n">I</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">I</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># then it is equivalent to:
+</span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
+        <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span>
+</pre></table></code></div></div><h3 id="场元数据">场元数据</h3><p>场的数据类型和大小可以在两类作用域中访问。</p><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre><span class="nd">@ti.func</span>
+<span class="k">def</span> <span class="nf">print_field_info</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ti</span><span class="p">.</span><span class="nf">template</span><span class="p">()):</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">'Field dimensionality is'</span><span class="p">,</span> <span class="nf">len</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ti</span><span class="p">.</span><span class="nf">static</span><span class="p">(</span><span class="nf">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">))):</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">'Size alone dimension'</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="s">'is'</span><span class="p">,</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">ti</span><span class="p">.</span><span class="nf">static_print</span><span class="p">(</span><span class="s">'Field data type is'</span><span class="p">,</span> <span class="n">x</span><span class="p">.</span><span class="n">dtype</span><span class="p">)</span>
+</pre></table></code></div></div><h3 id="矩阵向量元数据">矩阵（向量）元数据</h3><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre><td class="rouge-code"><pre><span class="nd">@ti.kernel</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+  <span class="n">matrix</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nc">Matrix</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]])</span>
+  <span class="nf">print</span><span class="p">(</span><span class="n">matrix</span><span class="p">.</span><span class="n">n</span><span class="p">)</span>  <span class="c1"># 3
+</span>  <span class="nf">print</span><span class="p">(</span><span class="n">matrix</span><span class="p">.</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># 2
+</span>  <span class="n">vector</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nc">Vector</span><span class="p">([</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">])</span>
+  <span class="nf">print</span><span class="p">(</span><span class="n">vector</span><span class="p">.</span><span class="n">n</span><span class="p">)</span>  <span class="c1"># 3
+</span>  <span class="nf">print</span><span class="p">(</span><span class="n">vector</span><span class="p">.</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># 1
+</span></pre></table></code></div></div><h3 id="编译时计算">编译时计算</h3><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre><td class="rouge-code"><pre><span class="n">enable_projection</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="nd">@ti.kernel</span>
+<span class="k">def</span> <span class="nf">static</span><span class="p">():</span>
+  <span class="k">if</span> <span class="n">ti</span><span class="p">.</span><span class="nf">static</span><span class="p">(</span><span class="n">enable_projection</span><span class="p">):</span>  <span class="c1"># No runtime overhead
+</span>    <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="nd">@ti.kernel</span>
+<span class="k">def</span> <span class="nf">func</span><span class="p">():</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ti</span><span class="p">.</span><span class="nf">static</span><span class="p">(</span><span class="nf">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)):</span>  <span class="c1"># 强制循环展开
+</span>      <span class="nf">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+<span class="nd">@ti.kernel</span>
+<span class="k">def</span> <span class="nf">reset</span><span class="p">():</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">ti</span><span class="p">.</span><span class="nf">static</span><span class="p">(</span><span class="nf">range</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">n</span><span class="p">)):</span>
+      <span class="c1"># The inner loop must be unrolled since j is a vector index instead of a global field index.
+</span>      <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></table></code></div></div><p>循环展开可以提高运行时性能。太极中矩阵索引必须是编译时常量，而场索引可以是运行时变量。</p><h2 id="advanced-dense-layouts">Advanced dense layouts</h2><p>太极从数据布局中解耦算法，自动优化在特定数据布局上的数据访问。这允许我们尝试多种不同的数据布局，以找出对于特定任务最高效的一种。</p><p>建议先使用默认布局规范，如果必要的话使用 ti.root.X 迁移到高级布局。</p><h3 id="从-shape-到-tirootx">从 shape 到 ti.root.X</h3><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre><td class="rouge-code"><pre><span class="n">x</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">)</span>
+<span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">place</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="c1"># is equivalent to:
+</span><span class="n">x</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">())</span>
+</pre></table></code></div></div><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre><td class="rouge-code"><pre><span class="n">x</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">)</span>
+<span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">3</span><span class="p">).</span><span class="nf">place</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="c1"># is equivalent to:
+</span><span class="n">x</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></table></code></div></div><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre><td class="rouge-code"><pre><span class="n">x</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">)</span>
+<span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">ij</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)).</span><span class="nf">place</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="c1"># is equivalent to:
+</span><span class="n">x</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</pre></table></code></div></div><h3 id="行优先-vs-列优先">行优先 vs. 列优先</h3><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre><span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">3</span><span class="p">).</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">j</span><span class="p">,</span> <span class="mi">2</span><span class="p">).</span><span class="nf">place</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>    <span class="c1"># row-major (default)
+</span><span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">j</span><span class="p">,</span> <span class="mi">2</span><span class="p">).</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">3</span><span class="p">).</span><span class="nf">place</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>    <span class="c1"># column-major
+</span></pre></table></code></div></div><div class="language-cpp highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre><td class="rouge-code"><pre><span class="kt">int</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">2</span><span class="p">];</span>  <span class="c1">// row-major</span>
+<span class="kt">int</span> <span class="n">y</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">3</span><span class="p">];</span>  <span class="c1">// column-major</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">do_something</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]);</span>
+        <span class="n">do_something</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></table></code></div></div><h3 id="数组结构体aos-结构体数组soa">数组结构体（AoS）, 结构体数组（SoA）</h3><p>大小相同的场可以在一起被放置。如果数据元素经常在一起访问，将其放置在相对近的存储位置有助于提高缓存命中率。</p><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre><td class="rouge-code"><pre><span class="c1"># AoS
+</span><span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">3</span><span class="p">).</span><span class="nf">place</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>  
+<span class="c1">#  address low ............. address high
+#  x[0]   y[0] | x[1]  y[1] | x[2]   y[2]
+</span></pre></table></code></div></div><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre><td class="rouge-code"><pre><span class="c1"># SoA
+</span><span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">3</span><span class="p">).</span><span class="nf">place</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">3</span><span class="p">).</span><span class="nf">place</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="c1">#  address low ............. address high
+#  x[0]  x[1]   x[2] | y[0]   y[1]   y[2]
+</span></pre></table></code></div></div><h3 id="平面布局-vs-层次布局">平面布局 vs. 层次布局</h3><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre><td class="rouge-code"><pre><span class="n">val</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">))</span>
+
+<span class="c1"># a better layout
+</span><span class="n">val_</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">)</span>
+<span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">ijk</span><span class="p">,</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">)).</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">ijk</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)).</span><span class="nf">place</span><span class="p">(</span><span class="n">val_</span><span class="p">)</span>
+</pre></table></code></div></div><h3 id="对于高级稠密数据布局的结构-for-循环">对于高级稠密数据布局的结构 for 循环</h3><p>结构 for 循环会自动遵循嵌套稠密数据结构在内存中的顺序。</p><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre><td class="rouge-code"><pre><span class="c1"># A为行优先的，则遍历顺序为行优先的
+# A为列优先的，则遍历顺序为列优先的
+# A为层次的，则一层一层遍历
+</span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">A</span><span class="p">:</span>
+  <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></table></code></div></div><h3 id="例子">例子</h3><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+</pre><td class="rouge-code"><pre><span class="c1"># 行优先
+</span><span class="n">A</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">)</span>
+<span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">ij</span><span class="p">,</span> <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">)).</span><span class="nf">place</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+
+<span class="c1"># 列优先
+</span><span class="n">A</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">)</span>
+<span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">ji</span><span class="p">,</span> <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">)).</span><span class="nf">place</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="c1"># Note ti.ji instead of ti.ij
+</span>
+<span class="c1"># 8x8 blocked 2D array of size 1024x1024
+</span><span class="n">density</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">)</span>
+<span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">ij</span><span class="p">,</span> <span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">)).</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">ij</span><span class="p">,</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">)).</span><span class="nf">place</span><span class="p">(</span><span class="n">density</span><span class="p">)</span>
+
+<span class="c1"># AoS
+</span><span class="n">pos</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="n">Vector</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">)</span>
+<span class="n">vel</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="n">Vector</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">)</span>
+<span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">1024</span><span class="p">).</span><span class="nf">place</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">vel</span><span class="p">)</span>
+<span class="c1"># equivalent to
+</span><span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">1024</span><span class="p">).</span><span class="nf">place</span><span class="p">(</span><span class="nf">pos</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nf">pos</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nf">pos</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="nf">vel</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nf">vel</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nf">vel</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># SoA
+</span><span class="n">pos</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="n">Vector</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">)</span>
+<span class="n">vel</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="n">Vector</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+  <span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">1024</span><span class="p">).</span><span class="nf">place</span><span class="p">(</span><span class="nf">pos</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+  <span class="n">ti</span><span class="p">.</span><span class="n">root</span><span class="p">.</span><span class="nf">dense</span><span class="p">(</span><span class="n">ti</span><span class="p">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">1024</span><span class="p">).</span><span class="nf">place</span><span class="p">(</span><span class="nf">vel</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+</pre></table></code></div></div><h2 id="sparse-computation">Sparse computation</h2><p>参考论文：<a href="https://yuanming.taichi.graphics/publication/2019-taichi/taichi-lang.pdf">Taichi: A Language for High-Performance Computation on Spatially Sparse Data Structures</a></p><h2 id="differentiable-programming">Differentiable programming</h2><h3 id="titape">ti.Tape()</h3><p>ti.Tape(U) 的参数 U 必须是0维场，在开始时自动设置 U[None] 为0。</p><ol><li><p>needs_grad=True</p><li><p>with ti.Tape(y):</p><li><p>x.grad[None]</p></ol><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre><span class="n">x</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="p">(),</span> <span class="n">needs_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="p">(),</span> <span class="n">needs_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="nd">@ti.kernel</span>
+<span class="k">def</span> <span class="nf">compute_y</span><span class="p">():</span>
+    <span class="n">y</span><span class="p">[</span><span class="bp">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="bp">None</span><span class="p">])</span>
+
+<span class="k">with</span> <span class="n">ti</span><span class="p">.</span><span class="nc">Tape</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+    <span class="nf">compute_y</span><span class="p">()</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="s">'dy/dx ='</span><span class="p">,</span> <span class="n">x</span><span class="p">.</span><span class="n">grad</span><span class="p">[</span><span class="bp">None</span><span class="p">])</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">'at x ='</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="bp">None</span><span class="p">])</span>
+</pre></table></code></div></div><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre><span class="n">x</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="p">())</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="p">())</span>
+<span class="n">dy_dx</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="p">())</span>
+
+<span class="nd">@ti.kernel</span>
+<span class="k">def</span> <span class="nf">compute_dy_dx</span><span class="p">():</span>
+    <span class="n">dy_dx</span><span class="p">[</span><span class="bp">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="bp">None</span><span class="p">])</span>
+
+<span class="nf">compute_dy_dx</span><span class="p">()</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="s">'dy/dx ='</span><span class="p">,</span> <span class="n">dy_dx</span><span class="p">[</span><span class="bp">None</span><span class="p">])</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">'at x ='</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="bp">None</span><span class="p">])</span>
+</pre></table></code></div></div><h3 id="内核简化规则">内核简化规则</h3><p>全局数据访问规则：若全局场元素被写入多次，从第二次开始必须使用原子累加。直到累加完成，才能进行读操作。</p><p>内核简化规则：内核本体由多个简单嵌套 for 循环组成。</p><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre><td class="rouge-code"><pre><span class="nd">@ti.kernel</span>
+<span class="k">def</span> <span class="nf">differentiable_task</span><span class="p">():</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+      <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">300</span><span class="p">):</span>
+        <span class="p">...</span> <span class="n">do</span> <span class="n">whatever</span> <span class="n">you</span> <span class="n">want</span><span class="p">,</span> <span class="k">as</span> <span class="nb">long</span> <span class="k">as</span> <span class="n">there</span> <span class="n">are</span> <span class="n">no</span> <span class="n">loops</span>
+
+  <span class="c1"># Not allowed. The outer for loop contains two for loops
+</span>  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+      <span class="p">...</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+      <span class="p">...</span>
+</pre></table></code></div></div><p>静态 for 循环被 python 前端预处理器展开，因此不计入循环级别。</p><h3 id="difftaichi">DiffTaichi</h3><p>参考论文：<a href="https://arxiv.org/pdf/1910.00935.pdf">Differentiable Programming for Physical Simulation</a></p><h2 id="performance-tuning">Performance tuning</h2><h3 id="for-循环装饰器">for 循环装饰器</h3><h3 id="gpu-线程层次">GPU 线程层次</h3><p>迭代 &lt; 线程 &lt; 线程块 &lt; 网格</p><p>线程是并行的最小单元。线程里的所有迭代串行执行。我们通常在每个线程里使用一个迭代以最大化并行性能。</p><p>线程块中的所有线程并行执行，共享块局部存储。</p><p>网格是被主机启动的最小单元。网格中的所有块并行执行。太极中并行 for 循环是一个网格。</p><h3 id="api-参考">API 参考</h3><p><code class="language-plaintext highlighter-rouge">ti.block_dim(n)</code> 指定下一个并行 for 循环中每个线程块的线程数（必须为2的幂）</p><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre><td class="rouge-code"><pre><span class="nd">@ti.kernel</span>
+<span class="k">def</span> <span class="nf">func</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">8192</span><span class="p">):</span>  <span class="c1"># no decorator, use default settings
+</span>        <span class="p">...</span>
+
+    <span class="n">ti</span><span class="p">.</span><span class="nf">block_dim</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span>      <span class="c1"># change the property of next for-loop:
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">8192</span><span class="p">):</span>  <span class="c1"># will be parallelized with block_dim=128
+</span>        <span class="p">...</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">8192</span><span class="p">):</span>  <span class="c1"># no decorator, use default settings
+</span></pre></table></code></div></div><h2 id="objective-data-oriented-programming">Objective data-oriented programming</h2><p>略</p><h2 id="syntax-sugars">Syntax sugars</h2><p>在太极中，可以对内核和函数的局部变量使用 ti.static() 来创建别名。</p><p>场和函数可以通过 ti.static() 指定别名。</p><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre><td class="rouge-code"><pre><span class="nd">@ti.kernel</span>
+<span class="k">def</span> <span class="nf">my_kernel</span><span class="p">():</span>
+  <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">fun</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">static</span><span class="p">(</span><span class="n">field_a</span><span class="p">,</span> <span class="n">field_b</span><span class="p">,</span> <span class="n">some_function</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
+    <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nf">fun</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">])</span>
+</pre></table></code></div></div><p>别名也可以为类成员和方法创建，避免杂乱的 self。</p><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre><span class="nd">@ti.kernel</span>
+<span class="k">def</span> <span class="nf">compute_laplacian</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+  <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">static</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">a</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">b</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">dx</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">dy</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
+    <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> \
+           <span class="o">+</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">dy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+</pre></table></code></div></div><h2 id="coordinate-offsets">Coordinate offsets</h2><p>场可以使用坐标偏移量定义。偏移量移动场的边界，场的原点不再是零向量。场的维度应和偏移量一致。一个典型的用例是在物理模拟中支持具有负坐标的体素。</p><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre><td class="rouge-code"><pre><span class="n">a</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="n">Matrix</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span> <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>  <span class="c1"># lower left corner
+</span><span class="n">a</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>   <span class="c1"># lower right corner
+</span><span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">16</span><span class="p">,</span> <span class="mi">72</span><span class="p">]</span>  <span class="c1"># upper left corner
+</span><span class="n">a</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">72</span><span class="p">]</span>   <span class="c1"># upper right corner
+</span></pre></table></code></div></div><div class="language-python highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre><span class="n">a</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="n">Matrix</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,),</span> <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">16</span><span class="p">,</span> <span class="p">))</span>          <span class="c1"># Works!
+</span><span class="n">b</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="n">Vector</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span> <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">))</span>   <span class="c1"># Works!
+</span><span class="n">c</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="n">Matrix</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,))</span>             <span class="c1"># AssertionError
+</span><span class="n">d</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="n">Matrix</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">ti</span><span class="p">.</span><span class="n">f32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">16</span><span class="p">,</span> <span class="p">))</span>       <span class="c1"># AssertionError
+</span><span class="n">e</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">ti</span><span class="p">.</span><span class="n">i32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">offset</span><span class="o">=-</span><span class="mi">16</span><span class="p">)</span>                          <span class="c1"># Works!
+</span><span class="n">f</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">ti</span><span class="p">.</span><span class="n">i32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">offset</span><span class="o">=-</span><span class="mi">16</span><span class="p">)</span>                        <span class="c1"># AssertionError
+</span><span class="n">g</span> <span class="o">=</span> <span class="n">ti</span><span class="p">.</span><span class="nf">field</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">ti</span><span class="p">.</span><span class="n">i32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> <span class="n">offset</span><span class="o">=-</span><span class="mi">16</span><span class="p">)</span>                    <span class="c1"># AssertionError
+</span></pre></table></code></div></div></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/lazy.github.io/categories/cg/'>CG</a>, <a href='/lazy.github.io/categories/simulation/'>SIMULATION</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/lazy.github.io/tags/taichi/" class="post-tag no-text-decoration" >taichi</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> by the author.</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=Taichi 0.7.22 高级编程 - lazy&url=https://flyingpika.github.io/lazy.github.io/posts/advanced-programming/" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=Taichi 0.7.22 高级编程 - lazy&u=https://flyingpika.github.io/lazy.github.io/posts/advanced-programming/" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://telegram.me/share?text=Taichi 0.7.22 高级编程 - lazy&url=https://flyingpika.github.io/lazy.github.io/posts/advanced-programming/" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i class="fa-fw fas fa-link small" onclick="copyLink()" data-toggle="tooltip" data-placement="top" title="Copy link"></i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted topbar-down"><div class="access"><div id="access-lastmod" class="post"> <span>Recent Update</span><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/lazy.github.io/posts/unity-shortcut-key/">Unity 2020.3.22f1 快捷键</a><li><a href="/lazy.github.io/posts/surface-mesh/">CGAL 5.3 表面网格</a><li><a href="/lazy.github.io/posts/3d-polyhedral-surface/">CGAL 5.3 三维多面体表面</a><li><a href="/lazy.github.io/posts/snow/">A Material Point Method for Snow Simulation</a><li><a href="/lazy.github.io/posts/mixed-integer-quadrangulation/">Mixed-Integer Quadrangulation</a></ul></div><div id="access-tags"> <span>Trending Tags</span><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/lazy.github.io/tags/cgal/">cgal</a> <a class="post-tag" href="/lazy.github.io/tags/taichi/">taichi</a> <a class="post-tag" href="/lazy.github.io/tags/paper/">paper</a> <a class="post-tag" href="/lazy.github.io/tags/blender/">blender</a> <a class="post-tag" href="/lazy.github.io/tags/imgui/">imgui</a> <a class="post-tag" href="/lazy.github.io/tags/moment-of-inertia/">moment of inertia</a> <a class="post-tag" href="/lazy.github.io/tags/unity/">unity</a> <a class="post-tag" href="/lazy.github.io/tags/%E5%8D%9A%E5%AE%A2/">博客</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"> <span class="pl-3 pt-2 mb-2">Contents</span><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="post-extend-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/lazy.github.io/posts/hello-taichi/"><div class="card-body"> <span class="timeago small" > Jul 24, 2021 <i class="unloaded">2021-07-24T00:00:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Taichi 0.7.22 HELLO TAICHI</h3><div class="text-muted small"><p> OVERVIEW Hello,world! import taichi as ti # 初始化 ti.init(arch=ti.gpu) # 在GPU上运行，自动选择后端（CUDA-&gt;OpenGL-&gt;CPU） ti.init(arch=cuda) ti.init(arch=opengl) ti.init(arch=cpu) 当在 Windows 或 ARM 设备上使用 ...</p></div></div></a></div><div class="card"> <a href="/lazy.github.io/posts/api-references/"><div class="card-body"> <span class="timeago small" > Jul 24, 2021 <i class="unloaded">2021-07-24T02:00:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Taichi 0.7.22 API 参考</h3><div class="text-muted small"><p> Scalar fields 标量场最多有8个维度。 0维标量场即一个标量。 1维标量场为一维线性数组。 2维标量场用于二维的值。 3维标量场用于体数据。 标量场可以是稀疏或稠密的，这里仅考虑稠密标量场。 声明 ti.field(dtype, shape = None, offset = None) ...</p></div></div></a></div><div class="card"> <a href="/lazy.github.io/posts/gui-system/"><div class="card-body"> <span class="timeago small" > Jul 24, 2021 <i class="unloaded">2021-07-24T04:00:00+08:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Taichi 0.7.22 GUI 系统</h3><div class="text-muted small"><p> 创建窗体 ti.GUI(title = 'Taichi', res = (512, 512), background_color = 0x000000, show_gui = True, fullscreen = False) res：标量或元组。 background_color：十六进制 rgb。 1 gui = ti.GUI('...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/lazy.github.io/posts/api-references/" class="btn btn-outline-primary" prompt="Older"><p>Taichi 0.7.22 API 参考</p></a> <a href="/lazy.github.io/posts/gui-system/" class="btn btn-outline-primary" prompt="Newer"><p>Taichi 0.7.22 GUI 系统</p></a></div></div></div></div><footer class="d-flex w-100 justify-content-center"><div class="d-flex justify-content-between align-items-center"><div class="footer-left"><p class="mb-0"> © 2023 <a href="https://github.com/flyingPika">lazy</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><h4 class="text-muted mb-4">Trending Tags</h4><a class="post-tag" href="/lazy.github.io/tags/cgal/">cgal</a> <a class="post-tag" href="/lazy.github.io/tags/taichi/">taichi</a> <a class="post-tag" href="/lazy.github.io/tags/paper/">paper</a> <a class="post-tag" href="/lazy.github.io/tags/blender/">blender</a> <a class="post-tag" href="/lazy.github.io/tags/imgui/">imgui</a> <a class="post-tag" href="/lazy.github.io/tags/moment-of-inertia/">moment of inertia</a> <a class="post-tag" href="/lazy.github.io/tags/unity/">unity</a> <a class="post-tag" href="/lazy.github.io/tags/%E5%8D%9A%E5%AE%A2/">博客</a></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.7.3/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/lazy.github.io/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="https://flyingPika.github.io{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script>
